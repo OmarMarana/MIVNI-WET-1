@@ -13,24 +13,37 @@ class PlayerManager
 
     AVL_node<player,int> *player_tree;
     AVL_node<group,int> *group_tree;
-    
+
 
     
     
 
     public:
 
-    player() : playerID(-1), level(-1),group_node(nullptr),  player_node(nullptr); //constructor
-    player(int playerID,int level, AVL_node<group,int> *group_node, AVL_node<player,int> *player_node) :
-    playerID(playerID), level(level), group_node(group_node), player_node(player_node) ; //constructor
-    ~player(); //destructor
-    player(const player&); //copy constructor
-    player& operator=(const player& other); // avl_node1= avl_node2
+    PlayerManager() :player_tree(nullptr),group_tree(nullptr) {}; //constructor
+    PlayerManager(AVL_node<player,int> *player_tree, AVL_node<group,int> *group_tree) :
+    player_tree(player_tree),group_tree(group_tree) {} ; //constructor
+    ~PlayerManager(); //destructor
+    PlayerManager(const PlayerManager& player_manager); //copy constructor
+    PlayerManager& operator=(const PlayerManager& other); // avl_node1= avl_node2
 
-    friend bool operator==(const player& player1, const player& player2);
-    friend bool operator>(const player& player1, const player& player2);
-    friend bool operator<(const player& player1, const player& player2);
-}
+
+    StatusType PMAddGroup( int GroupID);
+
+    StatusType PMAddPlayer( int PlayerID, int GroupID, int Level);
+
+    StatusType PMRemovePlayer( int PlayerID);
+
+    StatusType PMReplaceGroup( int GroupID, int ReplacementID);
+
+    StatusType PMIncreaseLevel( int PlayerID, int LevelIncrease);
+
+    StatusType PMGetHighestLevel( int GroupID, int *PlayerID);
+
+    StatusType PMGetAllPlayersByLevel( int GroupID, int **Players, int *numOfPlayers);
+
+    StatusType PMGetGroupsHighestLevel( int numOfGroups, int **Players);
+};
 
 
 #endif
