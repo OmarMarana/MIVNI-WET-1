@@ -30,6 +30,9 @@ class PlayerManager
 
     StatusType PMAddGroup( int GroupID);
 
+
+    // res = pm.addplayer(1,2,10).adp;
+
     StatusType PMAddPlayer( int PlayerID, int GroupID, int Level);
 
     StatusType PMRemovePlayer( int PlayerID);
