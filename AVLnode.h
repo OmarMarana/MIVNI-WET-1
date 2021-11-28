@@ -4,50 +4,66 @@
 #include <memory>
 #include <cmath>
 
-#define INVALID_BF 2;
+
+#define INVALID_BF 2
 
 template <class T, class S>
 class AVL_node
 {
-    private:
-        
-        int BF;
-        T info; 
-        S key;   
-        int height;
-        std::shared_ptr<AVL_node<T,S>> father; // maybe delete class
-        std::shared_ptr<AVL_node<T,S>> left_son; 
-        std::shared_ptr<AVL_node<T,S>> right_son;  
-    
-    protected:
-        int getBF();
-        T getInfo();
-        S getKey();
-        int getHeight();
-        std::shared_ptr<AVL_node<T,S>> getFather(); // maybe & 
-        std::shared_ptr<AVL_node<T,S>> getLeft_son();
-        std::shared_ptr<AVL_node<T,S>> getRight_son();
-        int max(int h1, int h2);
+private:
+
+    int BF;
+    T info;
+    S key;
+    int height;
+    std::shared_ptr<AVL_node<T,S>> father; // maybe delete class
+    std::shared_ptr<AVL_node<T,S>> left_son;
+    std::shared_ptr<AVL_node<T,S>> right_son;
+
+protected:
+    int getBF();
+    T getInfo();
+//    S getKey();
+    int getHeight();
+    std::shared_ptr<AVL_node<T,S>> getFather(); // maybe &
+    std::shared_ptr<AVL_node<T,S>> getLeft_son();
+    std::shared_ptr<AVL_node<T,S>> getRight_son();
+    int max(int h1, int h2);
+    std::shared_ptr<AVL_node<T,S>> getNextInOrderVal();
+    void SwapInfoAndKey(std::shared_ptr<AVL_node<T,S>> avl_node);
 
 
-    public:
-        AVL_node() : BF(0) , info(), key(), height(0), father(nullptr),left_son(nullptr), right_son(nullptr){}; //constructor
-        AVL_node(S key, T info) : BF(0) , info(info), key(key), height(0), father(nullptr),left_son(nullptr), right_son(nullptr){} ; //constructor
-        ~AVL_node(); //destructor
-        AVL_node(const AVL_node&); //copy constructor
-        AVL_node& operator=(const AVL_node& other); // avl_node1= avl_node2
 
-        std::shared_ptr<AVL_node<T,S>> insert(std::shared_ptr<AVL_node<T,S>> root,S key,T info); // change other to sharedptr
-        std::shared_ptr<AVL_node<T,S>> deleteNode(std::shared_ptr<AVL_node<T,S>> root, S key);
-        
-        std::shared_ptr<AVL_node<T,S>> find(S key);
-        std::shared_ptr<AVL_node<T,S>> leftRotation(std::shared_ptr<AVL_node<T,S>> root);
-        std::shared_ptr<AVL_node<T,S>> rightRotation(std::shared_ptr<AVL_node<T,S>> root);
-        // void inOrder(AVL_node *root);
-        std::shared_ptr<AVL_node<T,S>> treeBalance(std::shared_ptr<AVL_node<T,S>> avl_node);
-        void updateHeight();
-        void updateBF();
-        
+
+public:
+    AVL_node() : BF(0) , info(), key(), height(0), father(nullptr),left_son(nullptr), right_son(nullptr){}; //constructor
+    AVL_node(S key, T info) : BF(0) , info(info), key(key), height(0), father(nullptr),left_son(nullptr), right_son(nullptr){} ; //constructor
+    ~AVL_node() = default; //destructor
+    AVL_node(const AVL_node&); //copy constructor
+    AVL_node& operator=(const AVL_node& other); // avl_node1= avl_node2
+
+    std::shared_ptr<AVL_node<T,S>> insert(std::shared_ptr<AVL_node<T,S>> root,S key,T info); // change other to sharedptr
+    std::shared_ptr<AVL_node<T,S>> deleteNode(std::shared_ptr<AVL_node<T,S>> root, S key);
+
+    std::shared_ptr<AVL_node<T,S>> find(S key);
+    std::shared_ptr<AVL_node<T,S>> leftRotation(std::shared_ptr<AVL_node<T,S>> root);
+    std::shared_ptr<AVL_node<T,S>> rightRotation(std::shared_ptr<AVL_node<T,S>> root);
+
+    std::shared_ptr<AVL_node<T,S>> treeBalance(std::shared_ptr<AVL_node<T,S>> avl_node);
+    void updateHeight();
+    void updateBF();
+
+
+    S getKey();
+
+    template<class DoSomething>
+    void inOrder(std::shared_ptr<AVL_node<T,S>> root, DoSomething doSomething);
+    template<class DoSomething>
+    void preOrder(std::shared_ptr<AVL_node<T,S>> root, DoSomething doSomething);
+
+    void updateHeightAndBFAfterRotation();
+    void updateHeightAndBFSearchPath();
+
 };
 
 
@@ -84,19 +100,19 @@ int AVL_node<T,S>::max(int h1, int h2){
 }
 template <class T, class S>
 void AVL_node<T,S>::updateHeight(){
-    
+
     int left_height = -1  ;
     if(this->getLeft_son() != nullptr){
         left_height = this->getLeft_son()->getHeight();
     }
-    
+
     int right_height = -1;
-    if(this->getLeft_son() != nullptr)
+    if(this->getRight_son() != nullptr)
     {
         right_height = this->getRight_son()->getHeight();
     }
-    this->getHeight = 1+max(left_height, right_son);
-    
+    this->height = 1+max(left_height, right_height);
+
 }
 
 template <class T, class S>
@@ -106,9 +122,9 @@ void AVL_node<T,S>::updateBF(){
     if(this->getLeft_son() != nullptr){
         left_height = this->getLeft_son()->getHeight();
     }
-    
+
     int right_height = -1;
-    if(this->getLeft_son() != nullptr)
+    if(this->getRight_son() != nullptr)
     {
         right_height = this->getRight_son()->getHeight();
     }
@@ -138,7 +154,7 @@ std::shared_ptr<AVL_node<T,S>> AVL_node<T,S>::getRight_son()
 
 template<class T,class S>
 AVL_node<T,S>::AVL_node(const AVL_node<T,S>& other) : BF(other.BF) ,info(other.info), key(other.key), height(other.height),
-father(other.father), left_son(other.left_son), right_son(other.right_son) {} // copy constructor
+                                                      father(other.father), left_son(other.left_son), right_son(other.right_son) {} // copy constructor
 
 
 
@@ -153,8 +169,8 @@ AVL_node<T,S>& AVL_node<T,S>::operator=(const AVL_node<T,S>& other)
     left_son = other.left_son;
     right_son=other.right_son;
 
-    
-    
+
+
 
 
 
@@ -169,44 +185,37 @@ std::shared_ptr<AVL_node<T,S>> AVL_node<T,S>::insert(std::shared_ptr< AVL_node<T
     if(root == nullptr)
     {
         // std::shared_ptr<AVL_node<T,S>> root(new AVL_node(key,info)); // make ptr with new if there is problems
-        std::shared_ptr<AVL_node<T,S>> root = (std::make_shared<AVL_node>(key,info));      
+        std::shared_ptr<AVL_node<T,S>> root = (std::make_shared<AVL_node>(key,info));
+
         return root;
-        
+
         //(*root)(key,info);
     }
-    
-
-    
-
-    if(key < root->get().key)
+    if(key < root->key)
     {
-        root->get().getLeft_son() = insert(root->getLeft_son(), key, info);
-        if(root->getLeft_son()->geykey() == key)
+        root->left_son = insert(root->getLeft_son(), key, info);
+        if(root->getLeft_son()->key == key)
         {
-            root->getLeft_son().father = root;
+            root->left_son->father = root;
         }
     }
 
-     if(key > root->root->getKey() ) //*****may be a bug here, check what Shelly did
+    if(key > root->key) //*****may be a bug here, check what Shelly did
     {
         //insert(root.getRight_son(), key, info);
-        root->getRight_son() = insert(root->getLeft_son(), key, info);
-        if(root->getRight_son()->geyKey() == key)
+        root->right_son = insert(root->getRight_son(), key, info);
+        if(root->right_son->key == key)
         {
-            root->getRight_son().father = root;
+            root->right_son->father = root;
         }
-
     }
-
-    
-
-    root->updateHeight();
-    root->updateBF();
+//    root->updateHeight();
+//    root->updateBF();
     //root = treeBalance(root); // remove from here and call the function after insert call
-    
-    
 
-    return root; 
+
+
+    return root;
 
 
 }
@@ -214,16 +223,28 @@ std::shared_ptr<AVL_node<T,S>> AVL_node<T,S>::insert(std::shared_ptr< AVL_node<T
 template<class T,class S>
 std::shared_ptr<AVL_node<T,S>>  AVL_node<T,S>::treeBalance(std::shared_ptr<AVL_node<T,S>> avl_node) // where to get avlnode from?
 {
-    
+//    avl_node->updateHeight();
+//    avl_node->updateBF();
+    if(avl_node->father)
+    {
+        avl_node->father->updateHeight();
+        avl_node->father->updateBF();
+        if(avl_node->father->father)
+        {
+            avl_node->father->father->updateHeight();
+            avl_node->father->father->updateBF();
+        }
+    }
+
+    std::shared_ptr<AVL_node<T,S>> tmp = avl_node;
     while(avl_node != nullptr)
     {
-
-        int bf = *avl_node.get().getBF;
+        int bf = avl_node->BF;
         if( bf == INVALID_BF )
         {
             if(avl_node->getLeft_son()->getBF() == -1)
             {
-                avl_node = leftRotation(avl_node->get().left_son); // LR
+                std::shared_ptr<AVL_node<T,S>> trash = leftRotation(avl_node->left_son); // LR
             }
             avl_node = rightRotation(avl_node); //LL
         }
@@ -232,34 +253,18 @@ std::shared_ptr<AVL_node<T,S>>  AVL_node<T,S>::treeBalance(std::shared_ptr<AVL_n
         {
             if(avl_node->getRight_son()->getBF() == 1)
             {
-                avl_node = rightRotation(avl_node->get().right_son); // RL
+                std::shared_ptr<AVL_node<T,S>> trash = rightRotation(avl_node->right_son); // RL
             }
             avl_node = leftRotation(avl_node); //RR
         }
+        avl_node->updateHeightAndBFAfterRotation();
+        tmp = avl_node;
         avl_node= avl_node->father;
-    
+
     }
 
-    /**
-     * @brief 
-     * addplayer(DS,avl_node,key)
-     * {
-     *      newroot = insert(DS.playertree, avl_node);
-     *      //find the node
-     *      DS.playertree = treebalance(newroot ,avl_node);
-     *       
-     *      DS.playertree->find(key);
-     * }
-     * 
-     * 
-     * 
-     */
+    return tmp;
 
-    // avl_node->updateHeight();
-    // avl_node->updateBF();
-
-    return avl_node;
-            
 }
 
 template<class T,class S>
@@ -267,33 +272,35 @@ std::shared_ptr<AVL_node<T,S>> AVL_node<T,S>::leftRotation(std::shared_ptr<AVL_n
 {
     std::shared_ptr<AVL_node<T,S>> root_old_father = root->getFather(); // check if father is equal to NULL
     std::shared_ptr<AVL_node<T,S>> new_root = root->getRight_son();
-    std::shared_ptr<AVL_node<T,S>> new_root_left_son = new_root->getLeft_son();     // chaged from root->getFather() to 
-    
+    std::shared_ptr<AVL_node<T,S>> new_root_left_son = new_root->getLeft_son();     // chaged from root->getFather() to
+
     if(root_old_father != nullptr)
     {
-        
+
         if(root_old_father->getLeft_son() == root)
         {
-            root_old_father.left_son = new_root;
-            
+            root_old_father->left_son = new_root;
+
         }
-    
+
         if(root_old_father->getRight_son() == root)
         {
-            root_old_father.right_son = new_root;       
+            root_old_father->right_son = new_root;
         }
-        
-    }
-    new_root.father = root_old_father;
-     
-    root.father = new_root;
-    new_root.left_son = root;
-    
-    root.right_son = new_root_left_son;
-    new_root_left_son.father = root;
 
-    return root;
-    
+    }
+    new_root->father = root_old_father;
+
+    root->father = new_root;
+    new_root->left_son = root;
+
+    root->right_son = new_root_left_son;
+    if(new_root_left_son != nullptr){
+        new_root_left_son->father = root;
+       // root->right_son = nullptr;
+    }
+    return new_root;
+
 }
 
 template<class T,class S>
@@ -302,63 +309,67 @@ std::shared_ptr<AVL_node<T,S>> AVL_node<T,S>::rightRotation(std::shared_ptr<AVL_
     std::shared_ptr<AVL_node<T,S>> root_old_father = root->getFather();
     std::shared_ptr<AVL_node<T,S>> new_root = root->getLeft_son();
     std::shared_ptr<AVL_node<T,S>> new_root_right_son = new_root->getRight_son();
-    
+
     if(root_old_father != nullptr)
     {
-        
+
         if(root_old_father->getLeft_son() == root)
         {
-            root_old_father.left_son = new_root;
-            
+            root_old_father->left_son = new_root;
+
         }
-    
+
         if(root_old_father->getRight_son() == root)
         {
-            root_old_father.right_son = new_root;       
+            root_old_father->right_son = new_root;
         }
-        
+
     }
 
 
-    new_root.father = root_old_father;
-     
-    root.father = new_root;
-    new_root.right_son = root;
-    
-    root.left_son = new_root_right_son;
-    new_root_right_son.father = root;
+    new_root->father = root_old_father;
 
-    return root;
-    
+    root->father = new_root;
+    new_root->right_son = root;
+
+    root->left_son = new_root_right_son;
+    if(new_root_right_son != nullptr)
+    {
+        new_root_right_son->father = root;
+    }
+
+    return new_root;
+
 }
 
 
 
 
 template<class T,class S>
-std::shared_ptr<AVL_node<T,S>> AVL_node<T,S>::find(S key) 
+std::shared_ptr<AVL_node<T,S>> AVL_node<T,S>::find(S key)
 {
-   // std::shared_ptr<AVL_node<T,S>> tmp = this; 
-    std::shared_ptr<AVL_node<T,S>> tmp(new AVL_node(*this)); // maybe need <T,S>
-    
+    // std::shared_ptr<AVL_node<T,S>> tmp = this;
+    std::shared_ptr<AVL_node<T,S>> tmp = (std::make_shared<AVL_node>(*this));
+   // std::shared_ptr<AVL_node<T,S>> tmp(std::make_shared<AVL_node>(*this)); // maybe need <T,S>
+
     while(tmp != nullptr)
     {
-        if(tmp->get().key == key)
+        if(tmp->key == key)
         {
             return tmp;
         }
-        if(tmp->get().key < key)
+        if(tmp->key < key)
         {
-            tmp = tmp->get().right_son;
+            tmp = tmp->right_son;
         }
         else
         {
-            tmp = tmp->get().left_son;
+            tmp = tmp->left_son;
         }
-        
+
     }
     return nullptr;
-    
+
 }
 
 template<class T,class S>
@@ -369,36 +380,27 @@ std::shared_ptr<AVL_node<T,S>> AVL_node<T,S>::deleteNode(std::shared_ptr<AVL_nod
         return nullptr;
     }
     std::shared_ptr<AVL_node<T,S>> node_to_delete = root->get().find(key);
-   // std::shared_ptr<AVL_node<T,S>> tmp(new AVL_node(*this));
+    // std::shared_ptr<AVL_node<T,S>> tmp(new AVL_node(*this));
 
     if(node_to_delete == nullptr)
     {
         return root;
     }
-    
+
     std::shared_ptr<AVL_node<T,S>> tmp = node_to_delete->get().left_son ? node_to_delete->get().left_son :
-    node_to_delete->get().right_son ;
-    
+                                         node_to_delete->get().right_son ;
+
+    std::shared_ptr<AVL_node<T,S>> node_to_delete_father = node_to_delete->get().father;
     if(tmp == nullptr) //no children
     {
-        
-    } 
-
-
-
-
-
-
-    if(node_to_delete->get().left_son == nullptr && node_to_delete->get().right_son == nullptr) // node_to_delete is a leaf
-    {
         if(node_to_delete->get().father == nullptr) // we are at root
-        { 
+        {
             root = nullptr;
             return nullptr;
         }
-        else
+        else  //leaf
         {
-           // std::shared_ptr<AVL_node<T,S>> node_to_delete_father = node_to_delete->get().father;
+            //std::shared_ptr<AVL_node<T,S>> node_to_delete_father = node_to_delete->get().father;
             if(node_to_delete->get().father.getLeft_son == node_to_delete)
             {
                 node_to_delete->get().father.getLeft_son = nullptr;
@@ -407,70 +409,141 @@ std::shared_ptr<AVL_node<T,S>> AVL_node<T,S>::deleteNode(std::shared_ptr<AVL_nod
             {
                 node_to_delete->get().father.getRight_son = nullptr;
             }
-
+            node_to_delete_father->updateHeightAndBFSearchPath();
+            root = node_to_delete_father->treeBalance(node_to_delete_father);
+            // update height and bf for all nodes in the searching path and treeBalance
+            return root;
         }
+    }
+    else if(node_to_delete->get().left_son != nullptr)  //one child case (left son)
+    {
+        //std::shared_ptr<AVL_node<T,S>> node_to_delete_father = node_to_delete->get().father;
+        if(node_to_delete->get().father == nullptr) // we are at root
+        {
+
+            root = node_to_delete->get().left_son;
+            root.father = nullptr;
+            return root;  //child height and bf doesnt change
+        }
+        node_to_delete.father.left_son = node_to_delete.left_son;
+        node_to_delete.left_son.father =  node_to_delete.father;
+
+        node_to_delete_father->updateHeightAndBFSearchPath();
+        root = node_to_delete_father->treeBalance(node_to_delete_father);
+        // update height and bf for all nodes in the searching path and treeBalance
+        return root;
 
     }
-    else if(node_to_delete->get().left_son == nullptr || node_to_delete->get().right_son == nullptr)
+    else if(node_to_delete->get().right_son != nullptr)  //one child case (right son)
     {
-       
-        if(node_to_delete->get().left_son != nullptr)
+        if(node_to_delete->get().father == nullptr) // we are at root
         {
-            if(node_to_delete->get().father == nullptr) // we are at root
-            { 
-                
-                root = node_to_delete->get().left_son;
-                root.father = null;
-                return root;
-            }
-
-            node_to_delete.father = 
-            
-            
+            root = root->get().getRight_son();
+            root.father = nullptr;
+            return root; //child height and bf doesnt change
         }
-        
-        /*
-        setfather(avl_node)
-        {
+        node_to_delete.father.right_son = node_to_delete.right_son;
+        node_to_delete.right_son.father =  node_to_delete.father;
 
-        }
-
-
-
-        */
-        
-
-        
-
-        if(node_to_delete->get().right_son != nullptr)
-        {
-            if(node_to_delete->get().father == nullptr) // we are at root
-            { 
-                root = root->get().rigetRight_son();
-                root.father = nullptr;
-                return root;
-            }
-            node_to_delete->get().father
-        }
-
+        node_to_delete_father->updateHeightAndBFSearchPath();
+        root = node_to_delete_father->treeBalance(node_to_delete_father);
+        // update height and bf for all nodes in the searching path and treeBalance
+        return root;
     }
     else
     {
-
+        node_to_delete.SwapInfoAndKey(getNextInOrderVal(node_to_delete));
+        return deleteNode(root,key);
     }
 
-
-        
 
 
 }
 
 
-       
-        
+template<class T,class S>
+std::shared_ptr<AVL_node<T,S>> AVL_node<T,S>::getNextInOrderVal()
+{
+    std::shared_ptr<AVL_node<T,S>> tmp = this->right_son;
+    while(tmp->get().left_son !=nullptr)
+    {
+        tmp = tmp->get().left_son;
+
+    }
+
+    return tmp.father;
+
+}
+
+template<class T,class S>
+void AVL_node<T,S>::SwapInfoAndKey(std::shared_ptr<AVL_node<T,S>> avl_node)
+{
+    S tmp_key = this->get().key;
+    T tmp_info = this->get().info;
+
+    this->get().key = avl_node->get().key;
+    this->get().info = avl_node->get().info;
+
+    avl_node->get().key = tmp_key;
+    avl_node->get().info = tmp_info;
+}
+
+template<class T,class S>
+template<class DoSomething>
+void AVL_node<T,S>::inOrder(std::shared_ptr<AVL_node<T,S>> root, DoSomething doSomething)
+{
+    if(root == nullptr)
+    {
+        return;
+    }
+    inOrder(root->left_son, doSomething);
+    doSomething(root);
+    inOrder(root->right_son, doSomething);
+}
+
+template<class T,class S>
+void AVL_node<T,S>::updateHeightAndBFAfterRotation()
+{
+    if(this->left_son != nullptr)
+    {
+        this->left_son->updateHeight();
+        this->left_son->updateBF();
+    }
+    if(this->right_son != nullptr)
+    {
+        this->right_son->updateHeight();
+        this->right_son->updateBF();
+    }
+
+    this->updateHeight();
+    this->updateBF();
+
+}
 
 
+template<class T,class S>
+template<class DoSomething>
+void AVL_node<T,S>::preOrder(std::shared_ptr<AVL_node<T,S>> root, DoSomething doSomething)
+{
+    if(root == nullptr) return;
 
+    doSomething(root);
+    preOrder(root->left_son,doSomething);
+    preOrder(root->right_son, doSomething);
+
+}
+
+template<class T,class S>
+void  AVL_node<T,S>::updateHeightAndBFSearchPath()
+{
+    std::shared_ptr<AVL_node<T,S>> tmp = this;
+    while(tmp)
+    {
+        tmp->updateHeight();
+        tmp->updateBF();
+        tmp = tmp->father;
+    }
+}
 
 
 
