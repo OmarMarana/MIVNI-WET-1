@@ -4,6 +4,11 @@
 #include "AVLnode.h"
 #include <iostream>
 
+void NodePointSiblingsToNull(const std::shared_ptr<AVL_node<int,int>>& root)
+{
+    
+}
+
 void printNode(const std::shared_ptr<AVL_node<int,int>>& root){
    std::cout << root->getKey() << " " ;
 }
@@ -36,7 +41,7 @@ int main() {
     std::cout << std::endl ;
     root->preOrder(root,printNode);
 
-
+    root->postOrder(root,root->NodePointSiblingsToNull);
 
     return 0;
 
