@@ -62,8 +62,9 @@ public:
     template<class DoSomething>
     void preOrder(std::shared_ptr<AVL_node<T,S>> root, DoSomething doSomething);
 
-    template<class DoSomething>
-    void postOrder(std::shared_ptr<AVL_node<T,S>> root, DoSomething doSomething);
+    // template<class DoSomething>
+    // void postOrder(std::shared_ptr<AVL_node<T,S>> root, DoSomething doSomething);
+    void postOrder(std::shared_ptr<AVL_node<T,S>> root);
     
     void NodePointSiblingsToNull(const std::shared_ptr<AVL_node<int,int>>& root);
 
@@ -552,15 +553,20 @@ void  AVL_node<T,S>::updateHeightAndBFSearchPath()
 }
 
 template<class T,class S>
-template<class DoSomething>
-void AVL_node<T,S>::postOrder(std::shared_ptr<AVL_node<T,S>> root, DoSomething doSomething)
+// template<class DoSomething>
+// void AVL_node<T,S>::postOrder(std::shared_ptr<AVL_node<T,S>> root, DoSomething doSomething)
+void AVL_node<T,S>::postOrder(std::shared_ptr<AVL_node<T,S>> root)
 {
     if(root == nullptr) return;
     
     
-    postOrder(root->left_son,doSomething);
-    postOrder(root->right_son, doSomething);
-    doSomething(root);
+    // postOrder(root->left_son,doSomething);
+    // postOrder(root->right_son, doSomething);
+
+    postOrder(root->left_son);
+    postOrder(root->right_son);
+    
+    root->NodePointSiblingsToNull(root);
     
 
 }
