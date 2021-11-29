@@ -25,12 +25,13 @@ protected:
     T getInfo();
 //    S getKey();
     int getHeight();
-    std::shared_ptr<AVL_node<T,S>> getFather(); // maybe &
+//    std::shared_ptr<AVL_node<T,S>> getFather(); // maybe &
     std::shared_ptr<AVL_node<T,S>> getLeft_son();
     std::shared_ptr<AVL_node<T,S>> getRight_son();
     int max(int h1, int h2);
     std::shared_ptr<AVL_node<T,S>> getNextInOrderVal();
     void SwapInfoAndKey(std::shared_ptr<AVL_node<T,S>> avl_node);
+
 
 
 
@@ -45,7 +46,7 @@ public:
     std::shared_ptr<AVL_node<T,S>> insert(std::shared_ptr<AVL_node<T,S>> root,S key,T info); // change other to sharedptr
     std::shared_ptr<AVL_node<T,S>> deleteNode(std::shared_ptr<AVL_node<T,S>> root, S key);
 
-    std::shared_ptr<AVL_node<T,S>> find(S key);
+    std::shared_ptr<AVL_node<T,S>> find(std::shared_ptr<AVL_node<T,S>> root,S key);
     std::shared_ptr<AVL_node<T,S>> leftRotation(std::shared_ptr<AVL_node<T,S>> root);
     std::shared_ptr<AVL_node<T,S>> rightRotation(std::shared_ptr<AVL_node<T,S>> root);
 
@@ -55,6 +56,8 @@ public:
 
 
     S getKey();
+    std::shared_ptr<AVL_node<T,S>> getFather();
+
 
     template<class DoSomething>
     void inOrder(std::shared_ptr<AVL_node<T,S>> root, DoSomething doSomething);
@@ -248,7 +251,6 @@ std::shared_ptr<AVL_node<T,S>>  AVL_node<T,S>::treeBalance(std::shared_ptr<AVL_n
     std::shared_ptr<AVL_node<T,S>> tmp = avl_node;
     while(avl_node != nullptr)
     {
-        // avl_node->updateHeightAndBFAfterRotation();   ///change function's name
         avl_node->updateHeightAndBF();   ///change function's name
         int bf = avl_node->BF;
         if( bf == INVALID_BF )
@@ -268,7 +270,6 @@ std::shared_ptr<AVL_node<T,S>>  AVL_node<T,S>::treeBalance(std::shared_ptr<AVL_n
             }
             avl_node = leftRotation(avl_node); //RR
         }
-        // avl_node->updateHeightAndBFAfterRotation();
         avl_node->updateHeightAndBF();
         tmp = avl_node;
         avl_node= avl_node->father;
@@ -358,10 +359,11 @@ std::shared_ptr<AVL_node<T,S>> AVL_node<T,S>::rightRotation(std::shared_ptr<AVL_
 
 
 template<class T,class S>
-std::shared_ptr<AVL_node<T,S>> AVL_node<T,S>::find(S key)
+std::shared_ptr<AVL_node<T,S>> AVL_node<T,S>::find(std::shared_ptr<AVL_node<T,S>> root,S key)
 {
     // std::shared_ptr<AVL_node<T,S>> tmp = this;
-    std::shared_ptr<AVL_node<T,S>> tmp = (std::make_shared<AVL_node>(*this));
+//    std::shared_ptr<AVL_node<T,S>> tmp = (std::make_shared<AVL_node>(*this));
+     std::shared_ptr<AVL_node<T,S>> tmp = root;
     // std::shared_ptr<AVL_node<T,S>> tmp(std::make_shared<AVL_node>(*this)); // maybe need <T,S>
 
     while(tmp != nullptr)
@@ -391,7 +393,7 @@ std::shared_ptr<AVL_node<T,S>> AVL_node<T,S>::deleteNode(std::shared_ptr<AVL_nod
     {
         return nullptr;
     }
-    std::shared_ptr<AVL_node<T,S>> node_to_delete = root->get().find(key);
+    std::shared_ptr<AVL_node<T,S>> node_to_delete = root->find(root ,key);
     // std::shared_ptr<AVL_node<T,S>> tmp(new AVL_node(*this));
 
     if(node_to_delete == nullptr)
@@ -399,76 +401,96 @@ std::shared_ptr<AVL_node<T,S>> AVL_node<T,S>::deleteNode(std::shared_ptr<AVL_nod
         return root;
     }
 
-    std::shared_ptr<AVL_node<T,S>> tmp = node_to_delete->get().left_son ? node_to_delete->get().left_son :
-                                         node_to_delete->get().right_son ;
-
-    std::shared_ptr<AVL_node<T,S>> node_to_delete_father = node_to_delete->get().father;
-    if(tmp == nullptr) //no children
+    if(node_to_delete->left_son == NULL ||node_to_delete->right_son == NULL)
     {
-        if(node_to_delete->get().father == nullptr) // we are at root
+        //std::shared_ptr<AVL_node<T,S>> func(node_to_delete->right, node_to_delete->left)
+        std::shared_ptr<AVL_node<T,S>> tmp = node_to_delete->left_son ? node_to_delete->left_son :
+                                             node_to_delete->right_son ;
+
+        std::shared_ptr<AVL_node<T,S>> node_to_delete_father = node_to_delete->father;
+        if(tmp == nullptr) //no children
         {
-            root = nullptr;
-            return nullptr;
+            if(node_to_delete->father == nullptr) // we are at root
+            {
+                root = nullptr;
+                return nullptr;
+            }
+            else  //leaf
+            {
+                //std::shared_ptr<AVL_node<T,S>> node_to_delete_father = node_to_delete->get().father;
+                if(node_to_delete->father->left_son == node_to_delete)
+                {
+                    node_to_delete->father->left_son = nullptr;
+                }
+                else
+                {
+                    node_to_delete->father->right_son = nullptr;
+                }
+
+
+                node_to_delete->father = nullptr;
+
+
+                // node_to_delete_father->updateHeightAndBFSearchPath();
+                root = node_to_delete_father->treeBalance(node_to_delete_father);
+                // update height and bf for all nodes in the searching path and treeBalance
+                return root;
+            }
         }
-        else  //leaf
+        else if(node_to_delete->left_son != nullptr)  //one child case (left son)
         {
             //std::shared_ptr<AVL_node<T,S>> node_to_delete_father = node_to_delete->get().father;
-            if(node_to_delete->get().father.getLeft_son == node_to_delete)
+            if(node_to_delete->father == nullptr) // we are at root
             {
-                node_to_delete->get().father.getLeft_son = nullptr;
+
+                root = node_to_delete->left_son;
+                root->father = nullptr;
+                node_to_delete->left_son = nullptr;
+                return root;  //child height and bf doesnt change
             }
-            else
+            node_to_delete->father->left_son = node_to_delete->left_son;
+            node_to_delete->left_son->father =  node_to_delete->father;
+            node_to_delete->left_son = nullptr;
+            node_to_delete->father = nullptr;
+
+            // node_to_delete_father->updateHeightAndBFSearchPath();
+            root = node_to_delete_father->treeBalance(node_to_delete_father);
+            // update height and bf for all nodes in the searching path and treeBalance
+            return root;
+
+        }
+        else if(node_to_delete->right_son != nullptr)  //one child case (right son)
+        {
+            if(node_to_delete->father == nullptr) // we are at root
             {
-                node_to_delete->get().father.getRight_son = nullptr;
+                root = root->right_son;
+                root->father = nullptr;
+                node_to_delete->right_son = nullptr;
+                return root; //child height and bf doesnt change
             }
-            node_to_delete_father->updateHeightAndBFSearchPath();
+            node_to_delete->father->right_son = node_to_delete->right_son;
+            node_to_delete->right_son->father =  node_to_delete->father;
+            node_to_delete->right_son = nullptr;
+            node_to_delete->father = nullptr;
+
+
+            // node_to_delete_father->updateHeightAndBFSearchPath();
             root = node_to_delete_father->treeBalance(node_to_delete_father);
             // update height and bf for all nodes in the searching path and treeBalance
             return root;
         }
-    }
-    else if(node_to_delete->get().left_son != nullptr)  //one child case (left son)
-    {
-        //std::shared_ptr<AVL_node<T,S>> node_to_delete_father = node_to_delete->get().father;
-        if(node_to_delete->get().father == nullptr) // we are at root
-        {
 
-            root = node_to_delete->get().left_son;
-            root.father = nullptr;
-            return root;  //child height and bf doesnt change
-        }
-        node_to_delete.father.left_son = node_to_delete.left_son;
-        node_to_delete.left_son.father =  node_to_delete.father;
-
-        node_to_delete_father->updateHeightAndBFSearchPath();
-        root = node_to_delete_father->treeBalance(node_to_delete_father);
-        // update height and bf for all nodes in the searching path and treeBalance
-        return root;
-
-    }
-    else if(node_to_delete->get().right_son != nullptr)  //one child case (right son)
-    {
-        if(node_to_delete->get().father == nullptr) // we are at root
-        {
-            root = root->get().getRight_son();
-            root.father = nullptr;
-            return root; //child height and bf doesnt change
-        }
-        node_to_delete.father.right_son = node_to_delete.right_son;
-        node_to_delete.right_son.father =  node_to_delete.father;
-
-        node_to_delete_father->updateHeightAndBFSearchPath();
-        root = node_to_delete_father->treeBalance(node_to_delete_father);
-        // update height and bf for all nodes in the searching path and treeBalance
-        return root;
     }
     else
     {
-        node_to_delete.SwapInfoAndKey(getNextInOrderVal(node_to_delete));
+        // node_to_delete->SwapInfoAndKey(getNextInOrderVal(node_to_delete));
+        node_to_delete->SwapInfoAndKey(node_to_delete->getNextInOrderVal());
+      //  std::cout << node_to_delete->key << " " << node_to_delete->info << std::endl;
+      //  std::cout << node_to_delete->getNextInOrderVal()->key << " " << node_to_delete->getNextInOrderVal()->info << std::endl;
         return deleteNode(root,key);
     }
 
-
+    return root; // not supposed to get here bcus all option are taken care of
 
 }
 
@@ -478,27 +500,30 @@ template<class T,class S>
 std::shared_ptr<AVL_node<T,S>> AVL_node<T,S>::getNextInOrderVal()
 {
     std::shared_ptr<AVL_node<T,S>> tmp = this->right_son;
-    while(tmp->get().left_son !=nullptr)
+    while(tmp->left_son !=nullptr)
     {
-        tmp = tmp->get().left_son;
+        tmp = tmp->left_son;
 
     }
 
-    return tmp.father;
+    return tmp;
 
 }
 
 template<class T,class S>
 void AVL_node<T,S>::SwapInfoAndKey(std::shared_ptr<AVL_node<T,S>> avl_node)
 {
-    S tmp_key = this->get().key;
-    T tmp_info = this->get().info;
+    S tmp_key = this->key;
+    T tmp_info = this->info;
 
-    this->get().key = avl_node->get().key;
-    this->get().info = avl_node->get().info;
+    this->key = avl_node->key;
+    this->info = avl_node->info;
 
-    avl_node->get().key = tmp_key;
-    avl_node->get().info = tmp_info;
+    avl_node->key = tmp_key;
+    avl_node->info = tmp_info;
+
+//    std::cout << this->key << " " << this->info << std::endl;
+//    std::cout << avl_node->key << " " << avl_node->info << std::endl;
 }
 
 template<class T,class S>
@@ -531,7 +556,7 @@ void AVL_node<T,S>::updateHeightAndBF()
     this->updateHeight();
     this->updateBF();
 
-  //  this->printBFAndHeight();
+    //  this->printBFAndHeight();
 
 }
 
@@ -551,7 +576,8 @@ void AVL_node<T,S>::preOrder(std::shared_ptr<AVL_node<T,S>> root, DoSomething do
 template<class T,class S>
 void  AVL_node<T,S>::updateHeightAndBFSearchPath()
 {
-    std::shared_ptr<AVL_node<T,S>> tmp = this;
+    std::shared_ptr<AVL_node<T,S>> tmp = (std::make_shared<AVL_node>(*this));
+    //    std::shared_ptr<AVL_node<T,S>> root = (std::make_shared<AVL_node>(key,info));
     while(tmp)
     {
         tmp->updateHeight();

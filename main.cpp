@@ -6,11 +6,11 @@
 
 // void NodePointSiblingsToNull(const std::shared_ptr<AVL_node<int,int>>& root)
 // {
-    
+
 // }
 
 void printNode(const std::shared_ptr<AVL_node<int,int>>& root){
-   std::cout << root->getKey() << " " ;
+std::cout << root->getKey() << " " ;
 }
 
 int main() {
@@ -35,7 +35,7 @@ int main() {
     root = root->treeBalance(root->find(9));
     root = root->insert(root,15,15);
     root = root->treeBalance(root->find(15));
-    
+
     root = root->insert(root,33,33);
     root = root->treeBalance(root->find(33));
     root = root->insert(root,18,18);
@@ -56,6 +56,24 @@ int main() {
     root = root->treeBalance(root->find(31));
     root = root->insert(root,4,4);
     root = root->treeBalance(root->find(4));
+
+
+    // std::shared_ptr<AVL_node<int,int>> avl_node = root->find(17);
+    // avl_node = avl_node->getFather();
+    root = root->deleteNode(root ,17);
+    // root = root->treeBalance(avl_node);
+
+
+    // avl_node = root->find(33);
+    // avl_node = avl_node->getFather();
+    root = root->deleteNode(root ,33);
+    // root = root->treeBalance(avl_node);
+
+
+    // avl_node = root->find(6);
+    // avl_node = avl_node->getFather();
+    root = root->deleteNode(root ,6);
+    // root = root->treeBalance(avl_node);
 
 
     root->inOrder(root,printNode);
