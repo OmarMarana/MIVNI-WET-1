@@ -58,18 +58,20 @@ public:
 
     template<class DoSomething>
     void inOrder(std::shared_ptr<AVL_node<T,S>> root, DoSomething doSomething);
-    
+
     template<class DoSomething>
     void preOrder(std::shared_ptr<AVL_node<T,S>> root, DoSomething doSomething);
 
     // template<class DoSomething>
     // void postOrder(std::shared_ptr<AVL_node<T,S>> root, DoSomething doSomething);
     void postOrder(std::shared_ptr<AVL_node<T,S>> root);
-    
+
     void NodePointSiblingsToNull(const std::shared_ptr<AVL_node<int,int>>& root);
 
-    void updateHeightAndBFAfterRotation();
+    void updateHeightAndBF();
     void updateHeightAndBFSearchPath();
+
+    void printBFAndHeight();
 
 };
 
@@ -246,6 +248,8 @@ std::shared_ptr<AVL_node<T,S>>  AVL_node<T,S>::treeBalance(std::shared_ptr<AVL_n
     std::shared_ptr<AVL_node<T,S>> tmp = avl_node;
     while(avl_node != nullptr)
     {
+        // avl_node->updateHeightAndBFAfterRotation();   ///change function's name
+        avl_node->updateHeightAndBF();   ///change function's name
         int bf = avl_node->BF;
         if( bf == INVALID_BF )
         {
@@ -264,7 +268,8 @@ std::shared_ptr<AVL_node<T,S>>  AVL_node<T,S>::treeBalance(std::shared_ptr<AVL_n
             }
             avl_node = leftRotation(avl_node); //RR
         }
-        avl_node->updateHeightAndBFAfterRotation();
+        // avl_node->updateHeightAndBFAfterRotation();
+        avl_node->updateHeightAndBF();
         tmp = avl_node;
         avl_node= avl_node->father;
 
@@ -304,7 +309,7 @@ std::shared_ptr<AVL_node<T,S>> AVL_node<T,S>::leftRotation(std::shared_ptr<AVL_n
     root->right_son = new_root_left_son;
     if(new_root_left_son != nullptr){
         new_root_left_son->father = root;
-       // root->right_son = nullptr;
+        // root->right_son = nullptr;
     }
     return new_root;
 
@@ -357,7 +362,7 @@ std::shared_ptr<AVL_node<T,S>> AVL_node<T,S>::find(S key)
 {
     // std::shared_ptr<AVL_node<T,S>> tmp = this;
     std::shared_ptr<AVL_node<T,S>> tmp = (std::make_shared<AVL_node>(*this));
-   // std::shared_ptr<AVL_node<T,S>> tmp(std::make_shared<AVL_node>(*this)); // maybe need <T,S>
+    // std::shared_ptr<AVL_node<T,S>> tmp(std::make_shared<AVL_node>(*this)); // maybe need <T,S>
 
     while(tmp != nullptr)
     {
@@ -468,6 +473,7 @@ std::shared_ptr<AVL_node<T,S>> AVL_node<T,S>::deleteNode(std::shared_ptr<AVL_nod
 }
 
 
+
 template<class T,class S>
 std::shared_ptr<AVL_node<T,S>> AVL_node<T,S>::getNextInOrderVal()
 {
@@ -509,7 +515,7 @@ void AVL_node<T,S>::inOrder(std::shared_ptr<AVL_node<T,S>> root, DoSomething doS
 }
 
 template<class T,class S>
-void AVL_node<T,S>::updateHeightAndBFAfterRotation()
+void AVL_node<T,S>::updateHeightAndBF()
 {
     if(this->left_son != nullptr)
     {
@@ -524,6 +530,8 @@ void AVL_node<T,S>::updateHeightAndBFAfterRotation()
 
     this->updateHeight();
     this->updateBF();
+
+  //  this->printBFAndHeight();
 
 }
 
@@ -558,16 +566,16 @@ template<class T,class S>
 void AVL_node<T,S>::postOrder(std::shared_ptr<AVL_node<T,S>> root)
 {
     if(root == nullptr) return;
-    
-    
+
+
     // postOrder(root->left_son,doSomething);
     // postOrder(root->right_son, doSomething);
 
     postOrder(root->left_son);
     postOrder(root->right_son);
-    
+
     root->NodePointSiblingsToNull(root);
-    
+
 
 }
 
@@ -581,25 +589,11 @@ void AVL_node<T,S>::NodePointSiblingsToNull(const std::shared_ptr<AVL_node<int,i
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+template<class T,class S>
+void AVL_node<T,S>::printBFAndHeight()
+{
+    std::cout << this->BF<<" " << this->height << std::endl;
+    std::cout << " **************** " << std::endl;
+}
 
 #endif
