@@ -69,12 +69,15 @@ public:
     // void postOrder(std::shared_ptr<AVL_node<T,S>> root, DoSomething doSomething);
     void postOrder(std::shared_ptr<AVL_node<T,S>> root);
 
-    void NodePointSiblingsToNull(const std::shared_ptr<AVL_node<int,int>>& root);
+    void NodePointSiblingsToNull(const std::shared_ptr<AVL_node<T,S>>& root);
 
     void updateHeightAndBF();
     void updateHeightAndBFSearchPath();
 
     void printBFAndHeight();
+
+    std::shared_ptr<AVL_node<T,S>> deleteNodeHelper(std::shared_ptr<AVL_node<T,S>> node_to_delete, std::shared_ptr<AVL_node<T,S>> root);
+
 
 };
 
@@ -403,91 +406,23 @@ std::shared_ptr<AVL_node<T,S>> AVL_node<T,S>::deleteNode(std::shared_ptr<AVL_nod
 
     if(node_to_delete->left_son == NULL ||node_to_delete->right_son == NULL)
     {
-        //std::shared_ptr<AVL_node<T,S>> func(node_to_delete->right, node_to_delete->left)
-        std::shared_ptr<AVL_node<T,S>> tmp = node_to_delete->left_son ? node_to_delete->left_son :
-                                             node_to_delete->right_son ;
 
-        std::shared_ptr<AVL_node<T,S>> node_to_delete_father = node_to_delete->father;
-        if(tmp == nullptr) //no children
-        {
-            if(node_to_delete->father == nullptr) // we are at root
-            {
-                root = nullptr;
-                return nullptr;
-            }
-            else  //leaf
-            {
-                //std::shared_ptr<AVL_node<T,S>> node_to_delete_father = node_to_delete->get().father;
-                if(node_to_delete->father->left_son == node_to_delete)
-                {
-                    node_to_delete->father->left_son = nullptr;
-                }
-                else
-                {
-                    node_to_delete->father->right_son = nullptr;
-                }
-
-
-                node_to_delete->father = nullptr;
-
-
-                // node_to_delete_father->updateHeightAndBFSearchPath();
-                root = node_to_delete_father->treeBalance(node_to_delete_father);
-                // update height and bf for all nodes in the searching path and treeBalance
-                return root;
-            }
-        }
-        else if(node_to_delete->left_son != nullptr)  //one child case (left son)
-        {
-            //std::shared_ptr<AVL_node<T,S>> node_to_delete_father = node_to_delete->get().father;
-            if(node_to_delete->father == nullptr) // we are at root
-            {
-
-                root = node_to_delete->left_son;
-                root->father = nullptr;
-                node_to_delete->left_son = nullptr;
-                return root;  //child height and bf doesnt change
-            }
-            node_to_delete->father->left_son = node_to_delete->left_son;
-            node_to_delete->left_son->father =  node_to_delete->father;
-            node_to_delete->left_son = nullptr;
-            node_to_delete->father = nullptr;
-
-            // node_to_delete_father->updateHeightAndBFSearchPath();
-            root = node_to_delete_father->treeBalance(node_to_delete_father);
-            // update height and bf for all nodes in the searching path and treeBalance
-            return root;
-
-        }
-        else if(node_to_delete->right_son != nullptr)  //one child case (right son)
-        {
-            if(node_to_delete->father == nullptr) // we are at root
-            {
-                root = root->right_son;
-                root->father = nullptr;
-                node_to_delete->right_son = nullptr;
-                return root; //child height and bf doesnt change
-            }
-            node_to_delete->father->right_son = node_to_delete->right_son;
-            node_to_delete->right_son->father =  node_to_delete->father;
-            node_to_delete->right_son = nullptr;
-            node_to_delete->father = nullptr;
-
-
-            // node_to_delete_father->updateHeightAndBFSearchPath();
-            root = node_to_delete_father->treeBalance(node_to_delete_father);
-            // update height and bf for all nodes in the searching path and treeBalance
-            return root;
-        }
+        return deleteNodeHelper(node_to_delete,root);
 
     }
     else
     {
+        std::shared_ptr<AVL_node<T,S>> NextInOrderVal = node_to_delete->getNextInOrderVal();
         // node_to_delete->SwapInfoAndKey(getNextInOrderVal(node_to_delete));
-        node_to_delete->SwapInfoAndKey(node_to_delete->getNextInOrderVal());
+        node_to_delete->SwapInfoAndKey(NextInOrderVal);
+       // if(NextInOrderVal->right_son == nullptr || NextInOrderVal->left_son)
+      //  {
+            return deleteNodeHelper(NextInOrderVal,root);
+      //  }
+
       //  std::cout << node_to_delete->key << " " << node_to_delete->info << std::endl;
       //  std::cout << node_to_delete->getNextInOrderVal()->key << " " << node_to_delete->getNextInOrderVal()->info << std::endl;
-        return deleteNode(root,key);
+       // return deleteNode(root,key);
     }
 
     return root; // not supposed to get here bcus all option are taken care of
@@ -607,7 +542,7 @@ void AVL_node<T,S>::postOrder(std::shared_ptr<AVL_node<T,S>> root)
 
 
 template<class T,class S>
-void AVL_node<T,S>::NodePointSiblingsToNull(const std::shared_ptr<AVL_node<int,int>>& root)
+void AVL_node<T,S>::NodePointSiblingsToNull(const std::shared_ptr<AVL_node<T,S>>& root)
 {
     root->left_son = NULL;
     root->right_son= NULL;
@@ -621,5 +556,113 @@ void AVL_node<T,S>::printBFAndHeight()
     std::cout << this->BF<<" " << this->height << std::endl;
     std::cout << " **************** " << std::endl;
 }
+
+
+template<class T,class S>
+std::shared_ptr<AVL_node<T,S>> AVL_node<T,S>::deleteNodeHelper(std::shared_ptr<AVL_node<T,S>> node_to_delete, std::shared_ptr<AVL_node<T,S>> root)
+{
+    //std::shared_ptr<AVL_node<T,S>> func(node_to_delete->right, node_to_delete->left)
+    std::shared_ptr<AVL_node<T,S>> tmp = node_to_delete->left_son ? node_to_delete->left_son :
+                                         node_to_delete->right_son ;
+
+    std::shared_ptr<AVL_node<T,S>> node_to_delete_father = node_to_delete->father;
+    if(tmp == nullptr) //no children
+    {
+        if(node_to_delete->father == nullptr) // we are at root
+        {
+            root = nullptr;
+            return nullptr;
+        }
+        else  //leaf
+        {
+            //std::shared_ptr<AVL_node<T,S>> node_to_delete_father = node_to_delete->get().father;
+            if(node_to_delete->father->left_son == node_to_delete)
+            {
+                node_to_delete->father->left_son = nullptr;
+            }
+            else
+            {
+                node_to_delete->father->right_son = nullptr;
+            }
+
+
+            node_to_delete->father = nullptr;
+
+
+            // node_to_delete_father->updateHeightAndBFSearchPath();
+            root = node_to_delete_father->treeBalance(node_to_delete_father);
+            // update height and bf for all nodes in the searching path and treeBalance
+            return root;
+        }
+    }
+    else if(node_to_delete->left_son != nullptr)  //one child case (left son)
+    {
+        //std::shared_ptr<AVL_node<T,S>> node_to_delete_father = node_to_delete->get().father;
+        if(node_to_delete->father == nullptr) // we are at root
+        {
+
+            root = node_to_delete->left_son;
+            root->father = nullptr;
+            node_to_delete->left_son = nullptr;
+            return root;  //child height and bf doesnt change
+        }
+        if(node_to_delete->father->left_son == node_to_delete)
+        {
+            node_to_delete->father->left_son = node_to_delete->left_son;
+        }
+        else
+        {
+            node_to_delete->father->right_son = node_to_delete->left_son;
+        }
+        node_to_delete->left_son->father =  node_to_delete->father;
+        node_to_delete->left_son = nullptr;
+        node_to_delete->father = nullptr;
+
+        // node_to_delete_father->updateHeightAndBFSearchPath();
+        root = node_to_delete_father->treeBalance(node_to_delete_father);
+        // update height and bf for all nodes in the searching path and treeBalance
+        return root;
+
+    }
+    else if(node_to_delete->right_son != nullptr)  //one child case (right son)
+    {
+        if(node_to_delete->father == nullptr) // we are at root
+        {
+            root = root->right_son;
+            root->father = nullptr;
+            node_to_delete->right_son = nullptr;
+            return root; //child height and bf doesnt change
+        }
+
+
+        if(node_to_delete->father->left_son == node_to_delete)
+        {
+            node_to_delete->father->left_son = node_to_delete->right_son;
+        }
+        else
+        {
+            node_to_delete->father->right_son = node_to_delete->right_son;
+        }
+        node_to_delete->right_son->father =  node_to_delete->father;
+        node_to_delete->right_son = nullptr;
+        node_to_delete->father = nullptr;
+
+
+//        node_to_delete->father->right_son = node_to_delete->right_son;
+//        node_to_delete->right_son->father =  node_to_delete->father;
+//        node_to_delete->right_son = nullptr;
+//        node_to_delete->father = nullptr;
+
+
+        // node_to_delete_father->updateHeightAndBFSearchPath();
+        root = node_to_delete_father->treeBalance(node_to_delete_father);
+        // update height and bf for all nodes in the searching path and treeBalance
+        return root;
+    }
+
+    return root;
+}
+
+
 
 #endif
