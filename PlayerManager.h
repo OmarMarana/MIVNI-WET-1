@@ -11,7 +11,8 @@ class PlayerManager
 {
     private:
 
-    AVL_node<player,int> *player_tree;
+    
+    std::shared_ptr<AVL_node<player,player::LevelAndId>> player_tree;
     AVL_node<group,int> *group_tree;
 
 

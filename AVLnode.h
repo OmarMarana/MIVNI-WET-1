@@ -68,7 +68,7 @@ public:
 
     // template<class DoSomething>
     // void postOrder(std::shared_ptr<AVL_node<T,S>> root, DoSomething doSomething);
-    void postOrderAndDestory(std::shared_ptr<AVL_node<T,S>> root);
+    void postOrderAndDestroy(std::shared_ptr<AVL_node<T,S>> root);
 
     void NodePointSiblingsToNull(const std::shared_ptr<AVL_node<T,S>>& root);
 
@@ -527,7 +527,7 @@ void AVL_node<T,S>::preOrder(std::shared_ptr<AVL_node<T,S>> root, DoSomething do
 template<class T,class S>
 // template<class DoSomething>
 // void AVL_node<T,S>::postOrder(std::shared_ptr<AVL_node<T,S>> root, DoSomething doSomething)
-void AVL_node<T,S>::postOrderAndDestory(std::shared_ptr<AVL_node<T,S>> root)
+void AVL_node<T,S>::postOrderAndDestroy(std::shared_ptr<AVL_node<T,S>> root)
 {
     if(root == nullptr) return;
 
@@ -535,8 +535,8 @@ void AVL_node<T,S>::postOrderAndDestory(std::shared_ptr<AVL_node<T,S>> root)
     // postOrder(root->left_son,doSomething);
     // postOrder(root->right_son, doSomething);
 
-    postOrderAndDestory(root->left_son);
-    postOrderAndDestory(root->right_son);
+    postOrderAndDestroy(root->left_son);
+    postOrderAndDestroy(root->right_son);
 
     root->NodePointSiblingsToNull(root);
 
