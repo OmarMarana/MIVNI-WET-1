@@ -67,10 +67,7 @@ class player
 
     
 
-    protected:
-    LevelAndId getplayerLevelAndId();
-    std::shared_ptr<AVL_node<group,int>> group_node(); // maybe & 
-    std::shared_ptr<AVL_node<player,int>> player_node();
+    
     
 
     
@@ -81,10 +78,13 @@ class player
     player(int level,int playerID, std::shared_ptr<AVL_node<group,int>> group_node, std::shared_ptr<AVL_node<player,int>> player_node) :
     level_and_id(level,playerID), group_node(group_node), player_node(player_node) {}; //constructor
     ~player(); //destructor
-    player(const player&); //copy constructor
+    player(const player&) = default; //copy constructor
     player& operator=(const player& other); // avl_node1= avl_node2
+    LevelAndId getplayerLevelAndId();
+    std::shared_ptr<AVL_node<group,int>> getGroup_node(); // maybe & 
+    std::shared_ptr<AVL_node<player,int>> getPlayer_node();
 
-    void func();
+    
 
     // friend bool operator==(const player& player1, const player& player2);
     // friend bool operator>(const player& player1, const player& player2);
@@ -94,10 +94,6 @@ class player
 };
 
 
-void player::func()
-{
-    this->level_and_id.Level;
-}
 
 
 bool LevelAndId::operator==(const LevelAndId& other)
