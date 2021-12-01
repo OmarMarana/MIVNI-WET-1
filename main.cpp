@@ -10,14 +10,24 @@
 #include <chrono>
 #include <algorithm>
 
+
+#include "group.h"
+#include "player.h"
+
 // void NodePointSiblingsToNull(const std::shared_ptr<AVL_node<int,int>>& root)
 // {
 
 // }
 
-void printNode(const std::shared_ptr<AVL_node<int,int>>& root){
-std::cout << root->getKey() << " " ;
+// void printNode(const std::shared_ptr<AVL_node<int,int>>& root){
+// std::cout << root->getKey() << " " ;
+// }
+
+void printNode(const std::shared_ptr<AVL_node<player,LevelAndId>>& root)
+{
+std::cout<< "(" << root->getKey().Level << " , "<< root->getKey().Id << ")" << " " ;
 }
+
 
 int main() {
 
@@ -154,42 +164,58 @@ int main() {
 //    }
 
     //****************************************************************
+    //check that clone really creates a new tree thats not related to the tree thats being cloned
+
+    // std::shared_ptr<AVL_node<int,int>> root;
+
+    // root = root->insert(root,2,2);
+    // root = root->treeBalance(root->find(root,2));
+    // root = root->insert(root,1,1);
+    // root = root->treeBalance(root->find(root,1));
+    // root = root->insert(root,5,5);
+    // root = root->treeBalance(root->find(root,5));
+    // root = root->insert(root,6,6);
+    // root = root->treeBalance(root->find(root,6));
+    // root = root->insert(root,7,7);
+    // root = root->treeBalance(root->find(root,7));
+    // root = root->insert(root,10,10);
+    // root = root->treeBalance(root->find(root,10));
+    // root = root->insert(root,3,3);
+    // root = root->treeBalance(root->find(root,3));
+
+    // std::shared_ptr<AVL_node<int,int>> root2;
+
+    // root2 = root2->clone(root,root->getFather());
+    // root2 = root2->deleteNode(root2 ,6);
+
+    // root->inOrder(root,printNode);
+    // std::cout << std::endl ;
+    // root->preOrder(root,printNode);
+
+    // std::cout << std::endl ;
+    // std::cout << "****************************************************************************************************" ;
+    // std::cout << std::endl ;
+
+    // root2->inOrder(root2,printNode);
+    // std::cout << std::endl ;
+    // root2->preOrder(root2,printNode);
+
+    // root->postOrderAndDestroy(root);
+    // root2->postOrderAndDestroy(root2);
+    
+    //****************************************************************
+    //test for properly defined order on LevelAndId
+
     std::shared_ptr<AVL_node<int,int>> root;
+    std::shared_ptr<AVL_node<player,LevelAndId>> level_and_id_player_tree;
 
-    root = root->insert(root,2,2);
-    root = root->treeBalance(root->find(root,2));
-    root = root->insert(root,1,1);
-    root = root->treeBalance(root->find(root,1));
-    root = root->insert(root,5,5);
-    root = root->treeBalance(root->find(root,5));
-    root = root->insert(root,6,6);
-    root = root->treeBalance(root->find(root,6));
-    root = root->insert(root,7,7);
-    root = root->treeBalance(root->find(root,7));
-    root = root->insert(root,10,10);
-    root = root->treeBalance(root->find(root,10));
-    root = root->insert(root,3,3);
-    root = root->treeBalance(root->find(root,3));
+    level_and_id_player_tree = level_and_id_player_tree->insert(level_and_id_player_tree,LevelAndId(9,5),player());
+    level_and_id_player_tree = level_and_id_player_tree->treeBalance(level_and_id_player_tree->find(level_and_id_player_tree,LevelAndId(9,5)));
 
-    std::shared_ptr<AVL_node<int,int>> root2;
+    // write new print and start checking
 
-    root2 = root2->clone(root,root->getFather());
-    root2 = root2->deleteNode(root2 ,6);
 
-    root->inOrder(root,printNode);
-    std::cout << std::endl ;
-    root->preOrder(root,printNode);
-
-    std::cout << std::endl ;
-    std::cout << "****************************************************************************************************" ;
-    std::cout << std::endl ;
-
-    root2->inOrder(root2,printNode);
-    std::cout << std::endl ;
-    root2->preOrder(root2,printNode);
-
-    root->postOrderAndDestroy(root);
-    root2->postOrderAndDestroy(root2);
+    //****************************************************************
 
 //    root = root->insert(root,8,8);
 //    root = root->treeBalance(root->find(root,8));

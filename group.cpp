@@ -48,13 +48,13 @@ int group::getGroupID() const
 }
 
 
-std::shared_ptr<AVL_node<player,player::LevelAndId>> group::getPlayers_tree() const
+std::shared_ptr<AVL_node<player,LevelAndId>> group::getPlayers_tree() const
 {
     return this->group_players_tree;
     
 }
 
-std::shared_ptr<AVL_node<player,player::LevelAndId>> group::getMax_level_player() const
+std::shared_ptr<AVL_node<player,LevelAndId>> group::getMax_level_player() const
 {
     return this->max_level_player;
 }

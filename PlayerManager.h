@@ -11,9 +11,9 @@ class PlayerManager
 {
     private:
 
-    
-    std::shared_ptr<AVL_node<player,player::LevelAndId>> player_tree;
-    AVL_node<group,int> *group_tree;
+    std::shared_ptr<AVL_node<player,LevelAndId>> level_and_id_player_tree;
+    std::shared_ptr<AVL_node<player,int>> int_player_tree;
+    std::shared_ptr<AVL_node<group,int>>group_tree;
 
 
     
@@ -21,12 +21,13 @@ class PlayerManager
 
     public:
 
-    PlayerManager() :player_tree(nullptr),group_tree(nullptr) {}; //constructor
-    PlayerManager(AVL_node<player,int> *player_tree, AVL_node<group,int> *group_tree) :
-    player_tree(player_tree),group_tree(group_tree) {} ; //constructor
+    PlayerManager() :level_and_id_player_tree(nullptr),int_player_tree(nullptr),group_tree(nullptr) {}; //constructor
+    PlayerManager(std::shared_ptr<AVL_node<player,LevelAndId>> level_and_id_player_tree, 
+    std::shared_ptr<AVL_node<player,int>> int_player_tree, std::shared_ptr<AVL_node<group,int>> group_tree) :
+    level_and_id_player_tree(level_and_id_player_tree),int_player_tree(int_player_tree),group_tree(group_tree) {} ; //constructor
     ~PlayerManager(); //destructor
     PlayerManager(const PlayerManager& player_manager); //copy constructor
-    PlayerManager& operator=(const PlayerManager& other); // avl_node1= avl_node2
+    PlayerManager& operator=(const PlayerManager& other); 
 
 
     StatusType PMAddGroup( int GroupID);
