@@ -90,7 +90,7 @@ class LevelAndId
             if its not less than and not equal then it must be larger than
             assuming the < and == are defined properly;
             */
-            if( (*this < other ) == false || (*this == other ) == false)
+            if( (*this < other ) == false && (*this == other ) == false)
             {
                 return true;
             }

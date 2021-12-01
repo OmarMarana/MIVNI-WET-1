@@ -202,7 +202,7 @@ int main() {
 
     // root->postOrderAndDestroy(root);
     // root2->postOrderAndDestroy(root2);
-    
+
     //****************************************************************
     //test for properly defined order on LevelAndId
 
@@ -220,11 +220,17 @@ int main() {
     tree = tree->insert(tree,LevelAndId(10,1),player(10,1,nullptr,nullptr));
     tree = tree->treeBalance(tree->find(tree,LevelAndId(10,1)));
 
-    
+//    tree = tree->insert(tree,LevelAndId(10,5),player(10,5,nullptr,nullptr));
+//    tree = tree->treeBalance(tree->find(tree,LevelAndId(10,5)));
+//
+//    tree = tree->insert(tree,LevelAndId(10,7),player(10,7,nullptr,nullptr));
+//    tree = tree->treeBalance(tree->find(tree,LevelAndId(10,7)));
+
+
     tree->inOrder(tree,printNode);
     std::cout << std::endl ;
     tree->preOrder(tree,printNode);
-    
+
     tree->postOrderAndDestroy(tree);
 
     // write new print and start checking
@@ -299,7 +305,7 @@ int main() {
 //    root = root->deleteNode(root ,2);
 //    root = root->deleteNode(root ,51);
 //    root = root->deleteNode(root ,10);
-    
+
 //    root->inOrder(root,printNode);
 //    std::cout << std::endl ;
 //    root->preOrder(root,printNode);
