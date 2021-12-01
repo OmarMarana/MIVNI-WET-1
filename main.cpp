@@ -12,7 +12,7 @@
 
 
 #include "group.h"
-#include "player.h"
+//#include "player.h"
 
 // void NodePointSiblingsToNull(const std::shared_ptr<AVL_node<int,int>>& root)
 // {
@@ -25,7 +25,7 @@
 
 void printNode(const std::shared_ptr<AVL_node<player,LevelAndId>>& root)
 {
-std::cout<< "(" << root->getKey().getLevel() << " , "<< root->getKey().getId()<< ")" << " " ;
+std::cout<< "(" << root->getKey().getLevel() << " , "<< root->getKey().getId()<< ")" << "  " ;
 }
 
 
@@ -207,18 +207,25 @@ int main() {
     //test for properly defined order on LevelAndId
 
     // std::shared_ptr<AVL_node<int,int>> root;
-    std::shared_ptr<AVL_node<player,LevelAndId>> level_and_id_player_tree;
+    std::shared_ptr<AVL_node<player,LevelAndId>> tree;
 
-    level_and_id_player_tree = level_and_id_player_tree->insert(level_and_id_player_tree,LevelAndId(9,5),player(9,5,nullptr,nullptr));
-    level_and_id_player_tree = level_and_id_player_tree->treeBalance(level_and_id_player_tree->find(level_and_id_player_tree,LevelAndId(9,5)));
+    tree = tree->insert(tree,LevelAndId(9,5),player(9,5,nullptr,nullptr));
+    tree = tree->treeBalance(tree->find(tree,LevelAndId(9,5)));
+    tree = tree->insert(tree,LevelAndId(8,6),player(8,6,nullptr,nullptr));
+    tree = tree->treeBalance(tree->find(tree,LevelAndId(8,6)));
+    tree = tree->insert(tree,LevelAndId(10,4),player(10,4,nullptr,nullptr));
+    tree = tree->treeBalance(tree->find(tree,LevelAndId(10,4)));
+    tree = tree->insert(tree,LevelAndId(10,3),player(10,3,nullptr,nullptr));
+    tree = tree->treeBalance(tree->find(tree,LevelAndId(10,3)));
+    tree = tree->insert(tree,LevelAndId(10,1),player(10,1,nullptr,nullptr));
+    tree = tree->treeBalance(tree->find(tree,LevelAndId(10,1)));
 
-    level_and_id_player_tree->inOrder(level_and_id_player_tree,printNode);
-   std::cout << std::endl ;
-   level_and_id_player_tree->preOrder(level_and_id_player_tree,printNode);
-
-
-   //31,4,52,66,88,66,7,3,5,2,51,10
-   level_and_id_player_tree->postOrderAndDestroy(level_and_id_player_tree);
+    
+    tree->inOrder(tree,printNode);
+    std::cout << std::endl ;
+    tree->preOrder(tree,printNode);
+    
+    tree->postOrderAndDestroy(tree);
 
     // write new print and start checking
 

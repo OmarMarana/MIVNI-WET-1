@@ -18,11 +18,12 @@ player& player::operator=(const player& other)
 
     //max_level_player = nullptr; // check that it dosnt point to family
     //group& group::operator=(const group& other)
+    return *this;
 
 }
 
 
-std::shared_ptr<AVL_node<group,int>> player::getGroup_node()
+void* player::getGroup_node()
 {
     return this->group_node;
 }

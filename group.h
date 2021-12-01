@@ -6,6 +6,10 @@
 
 #include <iostream>
 
+//class player;
+
+//class LevelAndId;
+
 class  group
 {
     private:
