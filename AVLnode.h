@@ -55,8 +55,9 @@ public:
     void updateBF();
 
 
+
     S getKey();
-    std::shared_ptr<AVL_node<T,S>> getFather();
+    std::shared_ptr<AVL_node<T,S>> getFather(); 
 
 
     template<class DoSomething>
@@ -67,16 +68,18 @@ public:
 
     // template<class DoSomething>
     // void postOrder(std::shared_ptr<AVL_node<T,S>> root, DoSomething doSomething);
-    void postOrder(std::shared_ptr<AVL_node<T,S>> root);
+    void postOrderAndDestory(std::shared_ptr<AVL_node<T,S>> root);
 
     void NodePointSiblingsToNull(const std::shared_ptr<AVL_node<T,S>>& root);
 
     void updateHeightAndBF();
-    void updateHeightAndBFSearchPath();
+    // void updateHeightAndBFSearchPath();
 
     void printBFAndHeight();
 
     std::shared_ptr<AVL_node<T,S>> deleteNodeHelper(std::shared_ptr<AVL_node<T,S>> node_to_delete, std::shared_ptr<AVL_node<T,S>> root);
+
+    std::shared_ptr<AVL_node<T,S>> clone(const std::shared_ptr<AVL_node<T,S>> root, const std::shared_ptr<AVL_node<T,S>> parent);
 
 
 };
@@ -508,23 +511,23 @@ void AVL_node<T,S>::preOrder(std::shared_ptr<AVL_node<T,S>> root, DoSomething do
 
 }
 
-template<class T,class S>
-void  AVL_node<T,S>::updateHeightAndBFSearchPath()
-{
-    std::shared_ptr<AVL_node<T,S>> tmp = (std::make_shared<AVL_node>(*this));
-    //    std::shared_ptr<AVL_node<T,S>> root = (std::make_shared<AVL_node>(key,info));
-    while(tmp)
-    {
-        tmp->updateHeight();
-        tmp->updateBF();
-        tmp = tmp->father;
-    }
-}
+// template<class T,class S>
+// void  AVL_node<T,S>::updateHeightAndBFSearchPath()
+// {
+//     std::shared_ptr<AVL_node<T,S>> tmp = (std::make_shared<AVL_node>(*this));
+//     //    std::shared_ptr<AVL_node<T,S>> root = (std::make_shared<AVL_node>(key,info));
+//     while(tmp)
+//     {
+//         tmp->updateHeight();
+//         tmp->updateBF();
+//         tmp = tmp->father;
+//     }
+// }
 
 template<class T,class S>
 // template<class DoSomething>
 // void AVL_node<T,S>::postOrder(std::shared_ptr<AVL_node<T,S>> root, DoSomething doSomething)
-void AVL_node<T,S>::postOrder(std::shared_ptr<AVL_node<T,S>> root)
+void AVL_node<T,S>::postOrderAndDestory(std::shared_ptr<AVL_node<T,S>> root)
 {
     if(root == nullptr) return;
 
@@ -532,8 +535,8 @@ void AVL_node<T,S>::postOrder(std::shared_ptr<AVL_node<T,S>> root)
     // postOrder(root->left_son,doSomething);
     // postOrder(root->right_son, doSomething);
 
-    postOrder(root->left_son);
-    postOrder(root->right_son);
+    postOrderAndDestory(root->left_son);
+    postOrderAndDestory(root->right_son);
 
     root->NodePointSiblingsToNull(root);
 
@@ -661,6 +664,37 @@ std::shared_ptr<AVL_node<T,S>> AVL_node<T,S>::deleteNodeHelper(std::shared_ptr<A
     }
 
     return root;
+}
+
+template<class T,class S>
+std::shared_ptr<AVL_node<T,S>> AVL_node<T,S>::clone(const std::shared_ptr<AVL_node<T,S>> root
+, const std::shared_ptr<AVL_node<T,S>> parent)
+{
+
+    if(root == nullptr)
+    {
+        return nullptr;
+    }
+
+    std::shared_ptr<AVL_node<T,S>> temp = (std::make_shared<AVL_node>(*root));
+    temp->key  = root->key;
+    temp->info = root->info;
+    temp->father = parent;
+    temp->left_son = clone(root->left_son,temp);
+    temp->right_son = clone(root->right_son, temp);
+    return temp;
+    /*
+        node  *clone( root ) :  
+       if (root == NULL ) : return root; 
+     
+       //create new node and make it a copy of node pointed by root 
+       node *temp = (node *)malloc(sizeof(node)) ; 
+       temp->data = root-> data;    //copying data 
+       temp->left = clone(root -> left);    //cloning left child 
+       temp->right = clone(root -> right);  //cloning right child 
+       return temp; 
+    */
+
 }
 
 
