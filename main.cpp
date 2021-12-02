@@ -1,8 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "AVLnode.h"
+//#include "AVLnode.h"
 #include <iostream>
+
+#include "PlayerManager.h"
+//#include "PlayerManagerUtilities.h"
 
 #include <vector>
 #include <ostream>
@@ -11,7 +14,7 @@
 #include <algorithm>
 
 
-#include "group.h"
+//#include "group.h"
 //#include "player.h"
 
 // void NodePointSiblingsToNull(const std::shared_ptr<AVL_node<int,int>>& root)
@@ -25,7 +28,7 @@
 
 void printNode(const std::shared_ptr<AVL_node<player,LevelAndId>>& root)
 {
-std::cout<< "(" << root->getKey().getLevel() << " , "<< root->getKey().getId()<< ")" << "  " ;
+    std::cout<< "(" << root->getKey().getLevel() << " , "<< root->getKey().getId()<< ")" << "  " ;
 }
 
 
@@ -206,19 +209,19 @@ int main() {
     //****************************************************************
     //test for properly defined order on LevelAndId
 
-     std::shared_ptr<AVL_node<int,int>> root;
-    std::shared_ptr<AVL_node<player,LevelAndId>> tree;
-
-    tree = tree->insert(tree,LevelAndId(9,5),player(9,5,nullptr,nullptr));
-    tree = tree->treeBalance(tree->find(tree,LevelAndId(9,5)));
-    tree = tree->insert(tree,LevelAndId(8,6),player(8,6,nullptr,nullptr));
-    tree = tree->treeBalance(tree->find(tree,LevelAndId(8,6)));
-    tree = tree->insert(tree,LevelAndId(10,4),player(10,4,nullptr,nullptr));
-    tree = tree->treeBalance(tree->find(tree,LevelAndId(10,4)));
-    tree = tree->insert(tree,LevelAndId(10,3),player(10,3,nullptr,nullptr));
-    tree = tree->treeBalance(tree->find(tree,LevelAndId(10,3)));
-    tree = tree->insert(tree,LevelAndId(10,1),player(10,1,nullptr,nullptr));
-    tree = tree->treeBalance(tree->find(tree,LevelAndId(10,1)));
+//     std::shared_ptr<AVL_node<int,int>> root;
+//    std::shared_ptr<AVL_node<player,LevelAndId>> tree;
+//
+//    tree = tree->insert(tree,LevelAndId(9,5,nullptr),player(9,5,nullptr,nullptr));
+//    tree = tree->treeBalance(tree->find(tree,LevelAndId(9,5,nullptr)));
+//    tree = tree->insert(tree,LevelAndId(8,6,nullptr),player(8,6,nullptr,nullptr));
+//    tree = tree->treeBalance(tree->find(tree,LevelAndId(8,6,nullptr)));
+//    tree = tree->insert(tree,LevelAndId(10,4,nullptr),player(10,4,nullptr,nullptr));
+//    tree = tree->treeBalance(tree->find(tree,LevelAndId(10,4,nullptr)));
+//    tree = tree->insert(tree,LevelAndId(10,3,nullptr),player(10,3,nullptr,nullptr));
+//    tree = tree->treeBalance(tree->find(tree,LevelAndId(10,3,nullptr)));
+//    tree = tree->insert(tree,LevelAndId(10,1,nullptr),player(10,1,nullptr,nullptr));
+//    tree = tree->treeBalance(tree->find(tree,LevelAndId(10,1,nullptr)));
 
 //    tree = tree->insert(tree,LevelAndId(10,5),player(10,5,nullptr,nullptr));
 //    tree = tree->treeBalance(tree->find(tree,LevelAndId(10,5)));
@@ -227,13 +230,48 @@ int main() {
 //    tree = tree->treeBalance(tree->find(tree,LevelAndId(10,7)));
 
 
-    tree->inOrder(tree,printNode);
-    std::cout << std::endl ;
-    tree->preOrder(tree,printNode);
+//    tree->inOrder(tree,printNode);
+//    std::cout << std::endl ;
+//    tree->preOrder(tree,printNode);
+//
+//    tree->postOrderAndDestroy(tree);
 
-    tree->postOrderAndDestroy(tree);
+//     write new print and start checking
 
-    // write new print and start checking
+
+    //****************************************************************
+    //test PM ADDGROUP AND DEST
+
+
+
+    PlayerManager pm1;
+//    int g1ID =1;
+    StatusType  res1 = pm1.PMAddGroup(1);
+    res1 = pm1.PMAddGroup(4);
+    res1 = pm1.PMAddGroup(7);
+    res1 = pm1.PMAddGroup(2);
+    res1 = pm1.PMAddGroup(10);
+
+    if(res1 != SUCCESS)
+    {
+        std::cout << "PMAddGroup FAILED" << std::endl;
+    }
+
+    StatusType res2 = pm1.PMAddPlayer(1,7,5);
+    res2 = pm1.PMAddPlayer(3,7,3);
+    res2 = pm1.PMAddPlayer(5,7,3);
+
+    if(res2 != SUCCESS)
+    {
+        std::cout << "PMAddpLAYER FAILED" << std::endl;
+    }
+
+//    pm1.Getgroup_tree()->inOrder(pm1.Getgroup_tree(),printNode);
+//    std::cout << std::endl ;
+//    pm1.Getgroup_tree()->preOrder(pm1.Getgroup_tree(),printNode);
+
+
+
 
 
     //****************************************************************

@@ -129,14 +129,14 @@ static commandType CheckCommand(const char* const command,
 
 static errorType OnInit(void** DS, const char* const command);
 static errorType OnAddGroup(void* DS, const char* const command);
-static errorType OnAddPlayer(void* DS, const char* const command);
-static errorType OnRemovePlayer(void* DS, const char* const command);
-static errorType OnReplaceGroup(void* DS, const char* const command);
-static errorType OnIncreaseLevel(void* DS, const char* const command);
-static errorType OnGetHighestLevel(void* DS, const char* const command);
-static errorType OnGetAllPlayersByLevel(void* DS, const char* const command);
-static errorType OnGetGroupsHighestLevel(void* DS, const char* const command);
-static errorType OnQuit(void** DS, const char* const command);
+// static errorType OnAddPlayer(void* DS, const char* const command);
+// static errorType OnRemovePlayer(void* DS, const char* const command);
+// static errorType OnReplaceGroup(void* DS, const char* const command);
+// static errorType OnIncreaseLevel(void* DS, const char* const command);
+// static errorType OnGetHighestLevel(void* DS, const char* const command);
+// static errorType OnGetAllPlayersByLevel(void* DS, const char* const command);
+// static errorType OnGetGroupsHighestLevel(void* DS, const char* const command);
+ static errorType OnQuit(void** DS, const char* const command);
 
 /***************************************************************************/
 /* Parser                                                                  */
@@ -157,28 +157,28 @@ static errorType parser(const char* const command) {
 	case (ADDGROUP_CMD):
 		rtn_val = OnAddGroup(DS, command_args);
 		break;
-	case (ADDPLAYER_CMD):
-		rtn_val = OnAddPlayer(DS, command_args);
-		break;
-	case (REMOVEPLAYER_CMD):
-		rtn_val = OnRemovePlayer(DS, command_args);
-		break;
-	case (REPLACEGROUP_CMD):
-		rtn_val = OnReplaceGroup(DS, command_args);
-		break;
-	case (INCREASELEVEL_CMD):
-		rtn_val = OnIncreaseLevel(DS, command_args);
-		break;
-	case (GETHIGHESTLEVEL_CMD):
-		rtn_val = OnGetHighestLevel(DS, command_args);
-		break;
-	case (GETALLPLAYERS_CMD):
-		rtn_val = OnGetAllPlayersByLevel(DS, command_args);
-		break;
-	case (GETGROUPSHIGHEST_CMD):
-		rtn_val = OnGetGroupsHighestLevel(DS, command_args);
-		break;
-	case (QUIT_CMD):
+	// case (ADDPLAYER_CMD):
+	// 	rtn_val = OnAddPlayer(DS, command_args);
+	// 	break;
+	// case (REMOVEPLAYER_CMD):
+	// 	rtn_val = OnRemovePlayer(DS, command_args);
+	// 	break;
+	// case (REPLACEGROUP_CMD):
+	// 	rtn_val = OnReplaceGroup(DS, command_args);
+	// 	break;
+	// case (INCREASELEVEL_CMD):
+	// 	rtn_val = OnIncreaseLevel(DS, command_args);
+	// 	break;
+	// case (GETHIGHESTLEVEL_CMD):
+	// 	rtn_val = OnGetHighestLevel(DS, command_args);
+	// 	break;
+	// case (GETALLPLAYERS_CMD):
+	// 	rtn_val = OnGetAllPlayersByLevel(DS, command_args);
+	// 	break;
+	// case (GETGROUPSHIGHEST_CMD):
+	// 	rtn_val = OnGetGroupsHighestLevel(DS, command_args);
+	// 	break;
+	// case (QUIT_CMD):
 		rtn_val = OnQuit(&DS, command_args);
 		break;
 
@@ -236,97 +236,97 @@ static errorType OnAddGroup(void* DS, const char* const command) {
 /***************************************************************************/
 /* OnAddPlayer                                                          */
 /***************************************************************************/
-static errorType OnAddPlayer(void* DS, const char* const command) {
-	int playerID;
-	int groupID;
-	int level;
-	ValidateRead(
-			sscanf(command, "%d %d %d", &playerID, &groupID, &level),
-			3, "AddPlayer failed.\n");
-	StatusType res = AddPlayer(DS, playerID, groupID, level);
+// // static errorType OnAddPlayer(void* DS, const char* const command) {
+// 	int playerID;
+// 	int groupID;
+// 	int level;
+// 	ValidateRead(
+// 			sscanf(command, "%d %d %d", &playerID, &groupID, &level),
+// 			3, "AddPlayer failed.\n");
+// 	StatusType res = AddPlayer(DS, playerID, groupID, level);
 
-	if (res != SUCCESS) {
-		printf("AddPlayer: %s\n", ReturnValToStr(res));
-		return error_free;
-	}
+// 	if (res != SUCCESS) {
+// 		printf("AddPlayer: %s\n", ReturnValToStr(res));
+// 		return error_free;
+// 	}
 
-	printf("AddPlayer: %s\n", ReturnValToStr(res));
-	return error_free;
-}
+// 	printf("AddPlayer: %s\n", ReturnValToStr(res));
+// 	return error_free;
+// }
 
 /***************************************************************************/
 /* OnRemovePlayer                                                            */
 /***************************************************************************/
-static errorType OnRemovePlayer(void* DS, const char* const command) {
-	int playerID;
-	ValidateRead(sscanf(command, "%d", &playerID), 1,
-			"RemovePlayer failed.\n");
-	StatusType res = RemovePlayer(DS, playerID);
-	if (res != SUCCESS) {
-		printf("RemovePlayer: %s\n", ReturnValToStr(res));
-		return error_free;
-	}
+// // static errorType OnRemovePlayer(void* DS, const char* const command) {
+// 	int playerID;
+// 	ValidateRead(sscanf(command, "%d", &playerID), 1,
+// 			"RemovePlayer failed.\n");
+// 	StatusType res = RemovePlayer(DS, playerID);
+// 	if (res != SUCCESS) {
+// 		printf("RemovePlayer: %s\n", ReturnValToStr(res));
+// 		return error_free;
+// 	}
 
-	printf("RemovePlayer: %s\n", ReturnValToStr(res));
-	return error_free;
-}
+// 	printf("RemovePlayer: %s\n", ReturnValToStr(res));
+// 	return error_free;
+// }
 
 /***************************************************************************/
 /* OnReplaceGroup                                                            */
 /***************************************************************************/
-static errorType OnReplaceGroup(void* DS, const char* const command) {
-	int groupID;
-	int replacementID;
-	ValidateRead(sscanf(command, "%d %d", &groupID, &replacementID), 2,
-			"ReplaceGroup failed.\n");
-	StatusType res = ReplaceGroup(DS, groupID, replacementID);
+// // static errorType OnReplaceGroup(void* DS, const char* const command) {
+// 	int groupID;
+// 	int replacementID;
+// 	ValidateRead(sscanf(command, "%d %d", &groupID, &replacementID), 2,
+// 			"ReplaceGroup failed.\n");
+// 	StatusType res = ReplaceGroup(DS, groupID, replacementID);
 
-	if (res != SUCCESS) {
-		printf("ReplaceGroup: %s\n", ReturnValToStr(res));
-		return error_free;
-	}
+// 	if (res != SUCCESS) {
+// 		printf("ReplaceGroup: %s\n", ReturnValToStr(res));
+// 		return error_free;
+// 	}
 
-	printf("ReplaceGroup: %s\n", ReturnValToStr(res));
-	return error_free;
-}
+// 	printf("ReplaceGroup: %s\n", ReturnValToStr(res));
+// 	return error_free;
+// }
 
 /***************************************************************************/
 /* OnIncreaseLevel                                                         */
-/***************************************************************************/
-static errorType OnIncreaseLevel(void* DS, const char* const command) {
-	int playerID;
-	int levelIncrease;
-	ValidateRead(sscanf(command, "%d %d", &playerID, &levelIncrease), 2,
-			"IncreaseLevel failed.\n");
-	StatusType res = IncreaseLevel(DS, playerID, levelIncrease);
+// /***************************************************************************/
+// // static errorType OnIncreaseLevel(void* DS, const char* const command) {
+// 	int playerID;
+// 	int levelIncrease;
+// 	ValidateRead(sscanf(command, "%d %d", &playerID, &levelIncrease), 2,
+// 			"IncreaseLevel failed.\n");
+// 	StatusType res = IncreaseLevel(DS, playerID, levelIncrease);
 
-	if (res != SUCCESS) {
-		printf("IncreaseLevel: %s\n", ReturnValToStr(res));
-		return error_free;
-	}
+// 	if (res != SUCCESS) {
+// 		printf("IncreaseLevel: %s\n", ReturnValToStr(res));
+// 		return error_free;
+// 	}
 
-	printf("IncreaseLevel: %s\n", ReturnValToStr(res));
-	return error_free;
-}
+// 	printf("IncreaseLevel: %s\n", ReturnValToStr(res));
+// 	return error_free;
+// }
 
 
 /***************************************************************************/
 /* OnGetHighestLevel                                                         */
 /***************************************************************************/
-static errorType OnGetHighestLevel(void* DS, const char* const command) {
-	int groupID;
-	ValidateRead(sscanf(command, "%d", &groupID), 1, "GetHighestLevel failed.\n");
-	int playerID;
-	StatusType res = GetHighestLevel(DS, groupID, &playerID);
+// // static errorType OnGetHighestLevel(void* DS, const char* const command) {
+// 	int groupID;
+// 	ValidateRead(sscanf(command, "%d", &groupID), 1, "GetHighestLevel failed.\n");
+// 	int playerID;
+// 	StatusType res = GetHighestLevel(DS, groupID, &playerID);
 
-	if (res != SUCCESS) {
-		printf("GetHighestLevel: %s\n", ReturnValToStr(res));
-		return error_free;
-	}
+// 	if (res != SUCCESS) {
+// 		printf("GetHighestLevel: %s\n", ReturnValToStr(res));
+// 		return error_free;
+// 	}
 
-	cout << "Highest level player is: " << playerID << endl;
-	return error_free;
-}
+// 	cout << "Highest level player is: " << playerID << endl;
+// 	return error_free;
+// }
 
 /***************************************************************************/
 /* OnGetAllPlayersByLevel                                                        */
@@ -345,55 +345,55 @@ void PrintAll(int *playerIDs, int numOfPlayers) {
 	free (playerIDs);
 }
 
-static errorType OnGetAllPlayersByLevel(void* DS, const char* const command) {
-	int groupID;
-	ValidateRead(sscanf(command, "%d", &groupID), 1,
-			"GetAllPlayersByLevel failed.\n");
-	int* playerIDs;
-	int numOfPlayers;
-	StatusType res = GetAllPlayersByLevel(DS, groupID, &playerIDs, &numOfPlayers);
+// // static errorType OnGetAllPlayersByLevel(void* DS, const char* const command) {
+// 	int groupID;
+// 	ValidateRead(sscanf(command, "%d", &groupID), 1,
+// 			"GetAllPlayersByLevel failed.\n");
+// 	int* playerIDs;
+// 	int numOfPlayers;
+// 	StatusType res = GetAllPlayersByLevel(DS, groupID, &playerIDs, &numOfPlayers);
 
-	if (res != SUCCESS) {
-		printf("GetAllPlayersByLevel: %s\n", ReturnValToStr(res));
-		return error_free;
-	}
+// 	if (res != SUCCESS) {
+// 		printf("GetAllPlayersByLevel: %s\n", ReturnValToStr(res));
+// 		return error_free;
+// 	}
 
-	PrintAll(playerIDs, numOfPlayers);
-	return error_free;
-}
+// 	PrintAll(playerIDs, numOfPlayers);
+// 	return error_free;
+// }
 
 /***************************************************************************/
 /* OnGetGroupsHighestLevel                                                        */
 /***************************************************************************/
 
-void PrintGroupsHighest(int *playerIDs, int numOfGroups) {
-	if (numOfGroups > 0) {
-		cout << "GroupIndex	||	Player" << endl;
-	}
+// // void PrintGroupsHighest(int *playerIDs, int numOfGroups) {
+// 	if (numOfGroups > 0) {
+// 		cout << "GroupIndex	||	Player" << endl;
+// 	}
 
-	for (int i = 0; i < numOfGroups; i++) {
-		cout << i + 1 << "\t||\t" << playerIDs[i] << endl;
-	}
-	cout << "and there are no more players!" << endl;
+// 	for (int i = 0; i < numOfGroups; i++) {
+// 		cout << i + 1 << "\t||\t" << playerIDs[i] << endl;
+// 	}
+// 	cout << "and there are no more players!" << endl;
 
-	free (playerIDs);
-}
+// 	free (playerIDs);
+// }
 
-static errorType OnGetGroupsHighestLevel(void* DS, const char* const command) {
-	int numOfGroups;
-	ValidateRead(sscanf(command, "%d", &numOfGroups), 1,
-			"GetGroupsHighestLevel failed.\n");
-	int* playerIDs;
-	StatusType res = GetGroupsHighestLevel(DS, numOfGroups, &playerIDs);
+// // static errorType OnGetGroupsHighestLevel(void* DS, const char* const command) {
+// 	int numOfGroups;
+// 	ValidateRead(sscanf(command, "%d", &numOfGroups), 1,
+// 			"GetGroupsHighestLevel failed.\n");
+// 	int* playerIDs;
+// 	StatusType res = GetGroupsHighestLevel(DS, numOfGroups, &playerIDs);
 
-	if (res != SUCCESS) {
-		printf("GetGroupsHighestLevel: %s\n", ReturnValToStr(res));
-		return error_free;
-	}
+// 	if (res != SUCCESS) {
+// 		printf("GetGroupsHighestLevel: %s\n", ReturnValToStr(res));
+// 		return error_free;
+// 	}
 
-	PrintGroupsHighest(playerIDs, numOfGroups);
-	return error_free;
-}
+// 	PrintGroupsHighest(playerIDs, numOfGroups);
+// 	return error_free;
+// }
 
 /***************************************************************************/
 /* OnQuit                                                                  */

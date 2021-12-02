@@ -55,7 +55,7 @@ public:
     void updateBF();
     T& getInfo();
 
-
+    void setInfo(T& new_info);
 
     S getKey();
     std::shared_ptr<AVL_node<T,S>> getFather(); 
@@ -85,6 +85,11 @@ public:
 
 };
 
+template <class T, class S>
+void AVL_node<T,S>::setInfo(T& new_info)
+{
+    this->info = new_info;
+}
 
 template <class T, class S>
 int AVL_node<T,S>::getBF()

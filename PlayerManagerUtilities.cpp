@@ -37,13 +37,13 @@ player& player::operator=(const player& other)
 }
 
 
-void* player::getGroup_node()
+std::shared_ptr<AVL_node<group,int>> player::getGroup_node()const
 {
     return this->group_node;
 }
 
 
-std::shared_ptr<AVL_node<player,int>> player::getPlayer_node()
+std::shared_ptr<AVL_node<LevelAndId,LevelAndId>> player::getPlayer_node()const
 {
     return this->player_node;
 }
@@ -54,7 +54,7 @@ LevelAndId player::getplayerLevelAndId()
 }
 
 
-void player::setPlayerGnode(void *gnode)
+void player::setPlayerGnode(std::shared_ptr<AVL_node<group,int>> gnode)
 {
     this->group_node= gnode;
 }
@@ -80,7 +80,7 @@ group::~group()
 }
 
 
-group::group(const group& other) : groupID(other.groupID)  // copy constructor
+group::group(const group& other) : groupID(other.groupID),num_of_players(other.num_of_players)  // copy constructor
 {
     // AVL_node<player, int> tree_copy = *(other.group_players_tree);
     // std::shared_ptr<AVL_node<player,int>>
@@ -117,6 +117,8 @@ group::group(const group& other) : groupID(other.groupID)  // copy constructor
 
 group& group::operator=(const group& other) // group1 = group2
 {
+    this->groupID = other.groupID;
+    this->num_of_players = other.num_of_players;
     //dest
     group_players_tree->postOrderAndDestroy(group_players_tree);
     max_level_player = nullptr; // check that it dosnt point to family
@@ -141,18 +143,33 @@ int group::getGroupID() const
 }
 
 
-std::shared_ptr<AVL_node<player,LevelAndId>> group::getPlayers_tree() const
+std::shared_ptr<AVL_node<LevelAndId,LevelAndId>> group::getPlayers_tree() const
 {
     return this->group_players_tree;
 
 }
 
-std::shared_ptr<AVL_node<player,LevelAndId>> group::getMax_level_player() const
+std::shared_ptr<AVL_node<LevelAndId,LevelAndId>> group::getMax_level_player() const
 {
     return this->max_level_player;
 }
 
+void group::setPlayers_tree(std::shared_ptr<AVL_node<LevelAndId,LevelAndId>>new_group_players_tree )
+{
+    this->group_players_tree = new_group_players_tree;
+}
 
+
+void group::set_max_level_player(std::shared_ptr<AVL_node<LevelAndId,LevelAndId>> new_max_level_player)
+{
+    this->max_level_player = new_max_level_player;
+}
+
+void group::setnNum_of_players()
+{
+    this->num_of_players++;
+
+}
 
 
 //******************************************************
@@ -217,4 +234,20 @@ int LevelAndId::getLevel() const
 int LevelAndId::getId() const
 {
     return Id;
+}
+
+std::shared_ptr<AVL_node<player,int>> LevelAndId::getPlayer_node() const
+{
+    return this->player_node;
+}
+
+LevelAndId::~LevelAndId()
+{
+    this->player_node = nullptr;
+}
+
+
+void  LevelAndId::setPlayer_node(std::shared_ptr<AVL_node<player,int>> new_player_node)
+{
+    this->player_node = new_player_node;
 }
