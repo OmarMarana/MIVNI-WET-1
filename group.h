@@ -2,7 +2,8 @@
 #define GROUP_H
 #include "AVLnode.h"
 #include "player.h"
-#include <stdbool.h>
+
+#include "level_and_id.h"
 
 #include <iostream>
 
@@ -10,16 +11,14 @@
 
 //class LevelAndId;
 
+//#include playerinfo
+
 class  group
 {
     private:
         int groupID;
         std::shared_ptr<AVL_node<player,LevelAndId>> group_players_tree;
         std::shared_ptr<AVL_node<player,LevelAndId>> max_level_player;
-
-
-    
-
 
     public:
 
@@ -37,8 +36,8 @@ class  group
         // friend bool operator>(const group& group1, const group& group2);
 
         int getGroupID() const;
-        std::shared_ptr<AVL_node<player,LevelAndId>> getPlayers_tree() const; // maybe 
-        std::shared_ptr<AVL_node<player,LevelAndId>> getMax_level_player() const;
+        std::shared_ptr<AVL_node<player,LevelAndId>> getPlayers_tree(); // maybe
+        std::shared_ptr<AVL_node<player,LevelAndId>> getMax_level_player();
 
 
 

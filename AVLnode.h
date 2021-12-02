@@ -22,7 +22,7 @@ private:
 
 protected:
     int getBF();
-    T getInfo();
+
 //    S getKey();
     int getHeight();
 //    std::shared_ptr<AVL_node<T,S>> getFather(); // maybe &
@@ -38,7 +38,7 @@ protected:
 
 public:
     AVL_node() : BF(0) , info(), key(), height(0), father(nullptr),left_son(nullptr), right_son(nullptr){}; //constructor
-    AVL_node(S key, T info) : BF(0) , info(info), key(key), height(0), father(nullptr),left_son(nullptr), right_son(nullptr){} ; //constructor
+    AVL_node(S& key, T& info) : BF(0) , info(info), key(key), height(0), father(nullptr),left_son(nullptr), right_son(nullptr){} ; //constructor
     ~AVL_node() = default; //destructor
     AVL_node(const AVL_node&); //copy constructor
     AVL_node& operator=(const AVL_node& other); // avl_node1= avl_node2
@@ -53,6 +53,7 @@ public:
     std::shared_ptr<AVL_node<T,S>> treeBalance(std::shared_ptr<AVL_node<T,S>> avl_node);
     void updateHeight();
     void updateBF();
+    T& getInfo();
 
 
 
@@ -92,7 +93,7 @@ int AVL_node<T,S>::getBF()
 }
 
 template <class T, class S>
-T AVL_node<T,S>::getInfo()
+T& AVL_node<T,S>::getInfo()
 {
     return this->info;
 }

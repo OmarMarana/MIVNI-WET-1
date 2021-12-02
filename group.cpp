@@ -14,10 +14,32 @@ group::group(const group& other) : groupID(other.groupID)  // copy constructor
     // AVL_node<player, int> tree_copy = *(other.group_players_tree);
     // std::shared_ptr<AVL_node<player,int>> 
     // std::shared_ptr<AVL_node<player,int>> tmp = (std::make_shared<AVL_node>(tree_copy));
+    /*
+     * OTHER:
+     * gropuID =3;
+     * tree = null;
+     * max = null;
+     *
+     * */
 
-    this->group_players_tree = other.group_players_tree->clone( other.group_players_tree, other.group_players_tree->getFather());
-    this->max_level_player = this->group_players_tree->find(this->group_players_tree, other.max_level_player->getKey());
-    
+    if(other.group_players_tree == nullptr)
+    {
+        this->group_players_tree = nullptr;
+    }
+    else
+    {
+        this->group_players_tree = other.group_players_tree->clone( other.group_players_tree, other.group_players_tree->getFather());
+    }
+
+    if(other.max_level_player == nullptr)
+    {
+        this->max_level_player = nullptr;
+    }
+    else
+    {
+        this->max_level_player = this->group_players_tree->find(this->group_players_tree, other.max_level_player->getKey());
+    }
+
 
 } 
 

@@ -13,10 +13,8 @@ class PlayerManager
 
     std::shared_ptr<AVL_node<player,LevelAndId>> level_and_id_player_tree;
     std::shared_ptr<AVL_node<player,int>> int_player_tree;
-    std::shared_ptr<AVL_node<group,int>>group_tree;
+    std::shared_ptr<AVL_node<group,int>> group_tree;
 
-
-    
     
 
     public:
@@ -31,9 +29,6 @@ class PlayerManager
 
 
     StatusType PMAddGroup( int GroupID);
-
-
-    // res = pm.addplayer(1,2,10).adp;
 
     StatusType PMAddPlayer( int PlayerID, int GroupID, int Level);
 
