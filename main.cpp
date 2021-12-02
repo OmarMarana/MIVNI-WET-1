@@ -207,33 +207,95 @@ int main() {
     //test for properly defined order on LevelAndId
 
     // std::shared_ptr<AVL_node<int,int>> root;
-    std::shared_ptr<AVL_node<player,LevelAndId>> tree;
-
-    tree = tree->insert(tree,LevelAndId(9,5),player(9,5,nullptr,nullptr));
-    tree = tree->treeBalance(tree->find(tree,LevelAndId(9,5)));
-    tree = tree->insert(tree,LevelAndId(8,6),player(8,6,nullptr,nullptr));
-    tree = tree->treeBalance(tree->find(tree,LevelAndId(8,6)));
-    tree = tree->insert(tree,LevelAndId(10,4),player(10,4,nullptr,nullptr));
-    tree = tree->treeBalance(tree->find(tree,LevelAndId(10,4)));
-    tree = tree->insert(tree,LevelAndId(10,3),player(10,3,nullptr,nullptr));
-    tree = tree->treeBalance(tree->find(tree,LevelAndId(10,3)));
-    tree = tree->insert(tree,LevelAndId(10,1),player(10,1,nullptr,nullptr));
-    tree = tree->treeBalance(tree->find(tree,LevelAndId(10,1)));
-
-//    tree = tree->insert(tree,LevelAndId(10,5),player(10,5,nullptr,nullptr));
-//    tree = tree->treeBalance(tree->find(tree,LevelAndId(10,5)));
+//    std::shared_ptr<AVL_node<player,LevelAndId>> tree;
 //
-//    tree = tree->insert(tree,LevelAndId(10,7),player(10,7,nullptr,nullptr));
-//    tree = tree->treeBalance(tree->find(tree,LevelAndId(10,7)));
-
-
-    tree->inOrder(tree,printNode);
-    std::cout << std::endl ;
-    tree->preOrder(tree,printNode);
-
-    tree->postOrderAndDestroy(tree);
+//    tree = tree->insert(tree,LevelAndId(9,5),player(9,5,nullptr,nullptr));
+//    tree = tree->treeBalance(tree->find(tree,LevelAndId(9,5)));
+//    tree = tree->insert(tree,LevelAndId(8,6),player(8,6,nullptr,nullptr));
+//    tree = tree->treeBalance(tree->find(tree,LevelAndId(8,6)));
+//    tree = tree->insert(tree,LevelAndId(10,4),player(10,4,nullptr,nullptr));
+//    tree = tree->treeBalance(tree->find(tree,LevelAndId(10,4)));
+//    tree = tree->insert(tree,LevelAndId(10,3),player(10,3,nullptr,nullptr));
+//    tree = tree->treeBalance(tree->find(tree,LevelAndId(10,3)));
+//    tree = tree->insert(tree,LevelAndId(10,1),player(10,1,nullptr,nullptr));
+//    tree = tree->treeBalance(tree->find(tree,LevelAndId(10,1)));
+//
+////    tree = tree->insert(tree,LevelAndId(10,5),player(10,5,nullptr,nullptr));
+////    tree = tree->treeBalance(tree->find(tree,LevelAndId(10,5)));
+////
+////    tree = tree->insert(tree,LevelAndId(10,7),player(10,7,nullptr,nullptr));
+////    tree = tree->treeBalance(tree->find(tree,LevelAndId(10,7)));
+//
+//
+//    tree->inOrder(tree,printNode);
+//    std::cout << std::endl ;
+//    tree->preOrder(tree,printNode);
+//
+//    tree->postOrderAndDestroy(tree);
 
     // write new print and start checking
+
+
+    //****************************************************************
+
+    /**
+        check if the conversion between <AVL_node<group,int>>* and void* is possible
+        check if its possible to acess field thru void*
+        test showed that player can still point to its location in its group
+        without having group.h in player.h, and thats possible by using void* conversions
+         from and to (AVL_node<T,S>*) AND by using SP.get() which returns the raw (dumb) pointer
+        that is saved in SP
+     */
+
+    /**
+     * check if its possible to move LevelAndId to a seperate file
+     *
+     */
+
+
+
+
+
+    int group1ID = 3;
+    group group1(group1ID, nullptr, nullptr);
+
+
+
+    //******************************************
+    //******************************************
+    //******************************************
+    //check why these cause the unexpected behavior
+    //    std::shared_ptr<AVL_node<group,int>> group_node(new AVL_node<group,int>(group1ID,group1));
+//    std::shared_ptr<AVL_node<group,int>> group_node = (std::make_shared<AVL_node<group,int>>(group1ID,group1));
+    //******************************************
+    //******************************************
+    //******************************************
+
+
+
+    std::shared_ptr<AVL_node<int,int>> group_node = (std::make_shared<AVL_node<int,int>>(1,1));
+    player player1(3,1, nullptr, nullptr);
+    player1.setPlayerGnode(group_node.get());
+    void * void_group_node = group_node.get();
+
+//    AVL_node<group,int> *void_group_node_conv = (AVL_node<group,int>*) (void_group_node);
+    AVL_node<int,int> *void_group_node_conv = (AVL_node<int,int>*) (void_group_node);
+
+    std::cout << "print using the SP"<< std::endl ;
+    std::cout << group_node->getKey() << " " ;
+    std::cout << std::endl ;
+
+    std::cout << "print using the void* converted to true type"<< std::endl ;
+    std::cout << void_group_node_conv->getKey() << " " ;
+
+    std::cout << std::endl ;
+
+    std::cout << "print using player field"<< std::endl ;
+    std::cout << ((AVL_node<int,int>*)(player1.getGroup_node()))->getKey() << " " ;
+
+
+//     std::shared_ptr<AVL_node<T,S>> root(new AVL_node(key,info)); // make ptr with new if there is problems
+
 
 
     //****************************************************************

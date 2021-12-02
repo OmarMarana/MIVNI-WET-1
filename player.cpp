@@ -38,3 +38,9 @@ LevelAndId player::getplayerLevelAndId()
 {
     return this->level_and_id;
 }
+
+
+void player::setPlayerGnode(void *gnode)
+{
+    this->group_node= gnode;
+}

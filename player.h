@@ -107,8 +107,6 @@ class LevelAndId
 class player 
 {
 
-        
-    
     private:
     LevelAndId level_and_id;
 //    std::shared_ptr<AVL_node<group,int>> group_node;
@@ -141,6 +139,8 @@ class player
     LevelAndId getplayerLevelAndId();
     void* getGroup_node(); // maybe &
     std::shared_ptr<AVL_node<player,int>> getPlayer_node();
+
+    void setPlayerGnode(void *gnode);
 
     
 
