@@ -59,21 +59,21 @@ private:
     LevelAndId level_and_id;
     std::shared_ptr<AVL_node<group,int>> group_node;
     // void *group_node;
-    std::shared_ptr<AVL_node<LevelAndId,LevelAndId>> player_node;
+    // std::shared_ptr<AVL_node<LevelAndId,LevelAndId>> player_node;
 
 
 public:
 
 
-    player() : level_and_id(-1,-1,nullptr) ,group_node(nullptr),  player_node(nullptr) {}; //constructor
-    player(int level,int playerID, std::shared_ptr<AVL_node<group,int>> group_node, std::shared_ptr<AVL_node<LevelAndId,LevelAndId>> player_node) :
-            level_and_id(level,playerID,nullptr), group_node(group_node), player_node(player_node) {}; //constructor
+    player() : level_and_id(-1,-1,nullptr) ,group_node(nullptr) {}; //constructor
+    player(int level,int playerID, std::shared_ptr<AVL_node<group,int>> group_node) :
+            level_and_id(level,playerID,nullptr), group_node(group_node) {}; //constructor
     ~player(); //destructor
     player(const player&) = default; //copy constructor
     player& operator=(const player& other); // avl_node1= avl_node2
     LevelAndId getplayerLevelAndId();
     std::shared_ptr<AVL_node<group,int>> getGroup_node() const ;// maybe &
-    std::shared_ptr<AVL_node<LevelAndId,LevelAndId>> getPlayer_node() const;
+    // std::shared_ptr<AVL_node<LevelAndId,LevelAndId>> getPlayer_node() const;
 
     void setPlayerGnode(std::shared_ptr<AVL_node<group,int>> gnode);
 
@@ -113,12 +113,13 @@ public:
     // friend bool operator>(const group& group1, const group& group2);
 
     int getGroupID() const;
+    int get_num_of_players() const;
     std::shared_ptr<AVL_node<LevelAndId,LevelAndId>> getPlayers_tree() const;
     std::shared_ptr<AVL_node<LevelAndId,LevelAndId>> getMax_level_player() const;
 
     void setPlayers_tree(std::shared_ptr<AVL_node<LevelAndId,LevelAndId>>new_group_players_tree ) ;
     void set_max_level_player(std::shared_ptr<AVL_node<LevelAndId,LevelAndId>> new_max_level_player) ;
-    void setnNum_of_players();
+    void setnNum_of_players(int delta);
 };
 
 //******************************************************

@@ -18,17 +18,17 @@
 player::~player()
 {
     this->group_node = nullptr;
-    this->player_node = nullptr;
+    // this->player_node = nullptr;
 }
 
 player& player::operator=(const player& other)
 {
     this->level_and_id = other.level_and_id;
     this->group_node = nullptr;
-    this->player_node = nullptr;
+    // this->player_node = nullptr;
 
     this->group_node =  other.group_node;
-    this->player_node = other.player_node;
+    // this->player_node = other.player_node;
 
     //max_level_player = nullptr; // check that it dosnt point to family
     //group& group::operator=(const group& other)
@@ -43,10 +43,10 @@ std::shared_ptr<AVL_node<group,int>> player::getGroup_node()const
 }
 
 
-std::shared_ptr<AVL_node<LevelAndId,LevelAndId>> player::getPlayer_node()const
-{
-    return this->player_node;
-}
+// std::shared_ptr<AVL_node<LevelAndId,LevelAndId>> player::getPlayer_node()const
+// {
+//     return this->player_node;
+// }
 
 LevelAndId player::getplayerLevelAndId()
 {
@@ -165,10 +165,15 @@ void group::set_max_level_player(std::shared_ptr<AVL_node<LevelAndId,LevelAndId>
     this->max_level_player = new_max_level_player;
 }
 
-void group::setnNum_of_players()
+void group::setnNum_of_players(int delta)
 {
-    this->num_of_players++;
+    this->num_of_players += delta;
 
+}
+
+int group::get_num_of_players() const
+{
+    return this->num_of_players;
 }
 
 

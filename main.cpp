@@ -266,6 +266,24 @@ int main() {
         std::cout << "PMAddpLAYER FAILED" << std::endl;
     }
 
+    StatusType res3 = pm1.PMRemovePlayer(3);
+    res3 = pm1.PMRemovePlayer(1);
+    if(res3 != SUCCESS)
+    {
+        std::cout << "PMREMOVEPlayer FAILED" << std::endl;
+    }
+
+    res2 = pm1.PMAddPlayer(9,2,500);
+    res2 = pm1.PMAddPlayer(4,2,501);
+
+    int  pID;
+    StatusType res4 = pm1.PMGetHighestLevel(2,&pID);
+    if(res4 != SUCCESS)
+    {
+        std::cout << "PMGetHighestLevel FAILED" << std::endl;
+    }
+
+    std::cout << "id is " << pID << std::endl;
 //    pm1.Getgroup_tree()->inOrder(pm1.Getgroup_tree(),printNode);
 //    std::cout << std::endl ;
 //    pm1.Getgroup_tree()->preOrder(pm1.Getgroup_tree(),printNode);

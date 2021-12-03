@@ -55,7 +55,9 @@ public:
     void updateBF();
     T& getInfo();
 
-    void setInfo(T& new_info);
+    std::shared_ptr<AVL_node<T,S>>  getNodeWithBiggestKey(std::shared_ptr< AVL_node<T,S> > root);
+
+    void setInfo(T new_info);
 
     S getKey();
     std::shared_ptr<AVL_node<T,S>> getFather(); 
@@ -85,8 +87,23 @@ public:
 
 };
 
+
 template <class T, class S>
-void AVL_node<T,S>::setInfo(T& new_info)
+std::shared_ptr<AVL_node<T,S>>  AVL_node<T,S>::getNodeWithBiggestKey(std::shared_ptr< AVL_node<T,S> > root)
+{
+    std::shared_ptr<AVL_node<T,S>> tmp = root;
+
+    while(tmp->getRight_son() != nullptr)
+    {
+        tmp = tmp->getRight_son();
+    }
+
+    return tmp;
+
+}
+
+template <class T, class S>
+void AVL_node<T,S>::setInfo(T new_info)
 {
     this->info = new_info;
 }
