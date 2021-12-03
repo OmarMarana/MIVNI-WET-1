@@ -5,7 +5,8 @@
 
 #include "PlayerManager.h"
 #include "AVLnode.h"
-#include <execution>
+#include <exception>
+//#include <execution>
 
 
 PlayerManager::~PlayerManager()
@@ -103,7 +104,7 @@ StatusType PlayerManager::PMAddPlayer( int PlayerID, int GroupID, int Level)
         group_node->getInfo().setPlayers_tree(group_node->getInfo().getPlayers_tree()->insert(group_node->getInfo().getPlayers_tree(
         ),levelAndId,levelAndId));
         group_node->getInfo().setPlayers_tree(group_node->getInfo().getPlayers_tree()->treeBalance
-        (group_node->getInfo().getPlayers_tree()->find(group_node->getInfo().getPlayers_tree(),levelAndId)));
+                (group_node->getInfo().getPlayers_tree()->find(group_node->getInfo().getPlayers_tree(),levelAndId)));
 
 
         std::shared_ptr<AVL_node<LevelAndId,LevelAndId>> new_max_level_player = group_node->getInfo().getPlayers_tree()->find(

@@ -99,10 +99,10 @@ private:
 
 public:
 
-    group() : groupID(-1) , group_players_tree(nullptr), max_level_player(nullptr),num_of_players(0) {}; //constructor
+    group() : groupID(-1) , num_of_players(0), group_players_tree(nullptr), max_level_player(nullptr) {}; //constructor
     group(int groupID,int num_of_players ,std::shared_ptr<AVL_node<LevelAndId,LevelAndId>> group_players_tree,
           std::shared_ptr<AVL_node<LevelAndId,LevelAndId>> max_level_player ): groupID(groupID) ,num_of_players(num_of_players)
-          , group_players_tree(group_players_tree), max_level_player(max_level_player) {}; //constructor
+            , group_players_tree(group_players_tree), max_level_player(max_level_player) {}; //constructor
 
     ~group(); //destructor
     group(const group&); //copy constructor
