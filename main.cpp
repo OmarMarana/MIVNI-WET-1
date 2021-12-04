@@ -31,6 +31,19 @@ void printNode(const std::shared_ptr<AVL_node<player,LevelAndId>>& root)
     std::cout<< "(" << root->getKey().getLevel() << " , "<< root->getKey().getId()<< ")" << "  " ;
 }
 
+void PrintAll(int *playerIDs, int numOfPlayers) {
+    if (numOfPlayers > 0) {
+        std::cout << "Rank	||	Player" << std::endl;
+    }
+
+    for (int i = 0; i < numOfPlayers; i++) {
+        std::cout << i + 1 << "\t||\t" << playerIDs[i] << std::endl;
+    }
+    std::cout << "and there are no more players!" << std::endl;
+
+    free (playerIDs);
+}
+
 
 int main() {
 
@@ -275,6 +288,9 @@ int main() {
 
     res2 = pm1.PMAddPlayer(9,2,500);
     res2 = pm1.PMAddPlayer(4,2,501);
+    res2 = pm1.PMAddPlayer(10,2,501);
+    res2 = pm1.PMAddPlayer(2,2,501);
+    res2 = pm1.PMAddPlayer(7,2,500);
 
     int  pID;
     StatusType res4 = pm1.PMGetHighestLevel(2,&pID);
@@ -282,6 +298,46 @@ int main() {
     {
         std::cout << "PMGetHighestLevel FAILED" << std::endl;
     }
+
+//    res2 = pm1.PMRemovePlayer(9);
+//    res2 = pm1.PMRemovePlayer(4);
+//    res2 = pm1.PMRemovePlayer(10);
+//    res2 = pm1.PMRemovePlayer(2);
+//    res2 = pm1.PMRemovePlayer(7);
+//    res2 = pm1.PMRemovePlayer(5);
+
+
+    int* Players ;
+    int numOfPlayers;
+    StatusType res5 = pm1.PMGetAllPlayersByLevel(-1,&Players,&numOfPlayers);
+    if(res5 != SUCCESS)
+    {
+        std::cout << "PMGetAllPlayersByLevel FAILED" << std::endl;
+    }
+
+
+     res4 = pm1.PMGetHighestLevel(-2,&pID);
+    if(res4 != SUCCESS)
+    {
+        std::cout << "PMGetHighestLevel FAILED" << std::endl;
+    }
+
+    int *Player1;
+    StatusType res6 = pm1.PMGetGroupsHighestLevel(2,&Player1);
+    if(res6 != SUCCESS)
+    {
+        std::cout << "PMGetAllPlayersByLevel FAILED" << std::endl;
+    }
+
+    StatusType res7 = pm1.PMIncreaseLevel(7,2);
+    if(res7 != SUCCESS)
+    {
+        std::cout << "PMGetAllPlayersByLevel FAILED" << std::endl;
+    }
+
+
+
+    PrintAll(Player1, 2);
 
     std::cout << "id is " << pID << std::endl;
 //    pm1.Getgroup_tree()->inOrder(pm1.Getgroup_tree(),printNode);

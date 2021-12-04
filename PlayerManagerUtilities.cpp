@@ -20,6 +20,10 @@ player::~player()
     this->group_node = nullptr;
     // this->player_node = nullptr;
 }
+void player::setPlayerLevel(int new_level)
+{
+    this->level_and_id.Level = new_level;
+}
 
 player& player::operator=(const player& other)
 {
@@ -256,3 +260,8 @@ void  LevelAndId::setPlayer_node(std::shared_ptr<AVL_node<player,int>> new_playe
 {
     this->player_node = new_player_node;
 }
+
+
+
+
+

@@ -46,6 +46,8 @@ public:
     bool operator>(const LevelAndId& other) const ;
 
     void setPlayer_node(std::shared_ptr<AVL_node<player,int>> new_player_node);
+//    void reverseInOrderNumTimes(std::shared_ptr<AVL_node<LevelAndId,LevelAndId>> avlNode, int Players[], int *numOfPlayers,int count);
+
 
 
 };
@@ -76,6 +78,7 @@ public:
     // std::shared_ptr<AVL_node<LevelAndId,LevelAndId>> getPlayer_node() const;
 
     void setPlayerGnode(std::shared_ptr<AVL_node<group,int>> gnode);
+    void setPlayerLevel(int new_level);
 
 
 };

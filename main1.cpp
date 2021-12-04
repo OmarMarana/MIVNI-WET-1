@@ -345,22 +345,22 @@ void PrintAll(int *playerIDs, int numOfPlayers) {
 	free (playerIDs);
 }
 
-// // static errorType OnGetAllPlayersByLevel(void* DS, const char* const command) {
-// 	int groupID;
-// 	ValidateRead(sscanf(command, "%d", &groupID), 1,
-// 			"GetAllPlayersByLevel failed.\n");
-// 	int* playerIDs;
-// 	int numOfPlayers;
-// 	StatusType res = GetAllPlayersByLevel(DS, groupID, &playerIDs, &numOfPlayers);
+ // static errorType OnGetAllPlayersByLevel(void* DS, const char* const command) {
+ 	int groupID;
+ 	ValidateRead(sscanf(command, "%d", &groupID), 1,
+ 			"GetAllPlayersByLevel failed.\n");
+ 	int* playerIDs;
+ 	int numOfPlayers;
+ 	StatusType res = GetAllPlayersByLevel(DS, groupID, &playerIDs, &numOfPlayers);
 
-// 	if (res != SUCCESS) {
-// 		printf("GetAllPlayersByLevel: %s\n", ReturnValToStr(res));
-// 		return error_free;
-// 	}
+ 	if (res != SUCCESS) {
+ 		printf("GetAllPlayersByLevel: %s\n", ReturnValToStr(res));
+ 		return error_free;
+ 	}
 
-// 	PrintAll(playerIDs, numOfPlayers);
-// 	return error_free;
-// }
+ 	PrintAll(playerIDs, numOfPlayers);
+ 	return error_free;
+ }
 
 /***************************************************************************/
 /* OnGetGroupsHighestLevel                                                        */

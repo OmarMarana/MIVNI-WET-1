@@ -15,6 +15,7 @@ class PlayerManager
     std::shared_ptr<AVL_node<group,int>> group_tree;
     std::shared_ptr<AVL_node<LevelAndId,int>> max_level_group_tree;
     int num_of_players;
+    int num_of_non_empty_groups;
     LevelAndId max_level_min_ID;
 
     
@@ -22,7 +23,7 @@ class PlayerManager
     public:
 
     PlayerManager() :level_and_id_player_tree(nullptr),int_player_tree(nullptr),group_tree(nullptr),
-    max_level_group_tree(nullptr) ,num_of_players(0) , max_level_min_ID(-1,-1,nullptr) {}; //constructor
+    max_level_group_tree(nullptr) ,num_of_players(0),num_of_non_empty_groups(0) , max_level_min_ID(-1,-1,nullptr) {}; //constructor
     // PlayerManager(std::shared_ptr<AVL_node<player,LevelAndId>> level_and_id_player_tree, 
     // std::shared_ptr<AVL_node<player,int>> int_player_tree, std::shared_ptr<AVL_node<group,int>> group_tree) :
     // level_and_id_player_tree(level_and_id_player_tree),int_player_tree(int_player_tree),group_tree(group_tree) {} ; //constructor

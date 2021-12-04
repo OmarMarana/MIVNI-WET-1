@@ -26,8 +26,8 @@ protected:
 //    S getKey();
     int getHeight();
 //    std::shared_ptr<AVL_node<T,S>> getFather(); // maybe &
-    std::shared_ptr<AVL_node<T,S>> getLeft_son();
-    std::shared_ptr<AVL_node<T,S>> getRight_son();
+//    std::shared_ptr<AVL_node<T,S>> getLeft_son();
+//    std::shared_ptr<AVL_node<T,S>> getRight_son();
     int max(int h1, int h2);
     std::shared_ptr<AVL_node<T,S>> getNextInOrderVal();
     void SwapInfoAndKey(std::shared_ptr<AVL_node<T,S>> avl_node);
@@ -60,7 +60,9 @@ public:
     void setInfo(T new_info);
 
     S getKey();
-    std::shared_ptr<AVL_node<T,S>> getFather(); 
+    std::shared_ptr<AVL_node<T,S>> getFather();
+    std::shared_ptr<AVL_node<T,S>> getLeft_son();
+    std::shared_ptr<AVL_node<T,S>> getRight_son();
 
 
     template<class DoSomething>
@@ -83,9 +85,161 @@ public:
     std::shared_ptr<AVL_node<T,S>> deleteNodeHelper(std::shared_ptr<AVL_node<T,S>> node_to_delete, std::shared_ptr<AVL_node<T,S>> root);
 
     std::shared_ptr<AVL_node<T,S>> clone(const std::shared_ptr<AVL_node<T,S>> root, const std::shared_ptr<AVL_node<T,S>> parent);
+    void reverseInOrderNumTimes(std::shared_ptr<AVL_node<T,S>> avlNode, int Players[], int *numOfPlayers,int count);
+    void InOrderNumTimes(std::shared_ptr<AVL_node<T,S>> avlNode, int Players[], int *numOfPlayers,int count);
+    void storeInorder(std::shared_ptr<AVL_node<T,S>> avlNode, T inorderInfoArr[], S inorderKeyArr[], int *index_ptr);
+    S * merge(T arr1Info[], S arr1Key[],T arr2Info[], S arr2Key[], T mergedInfoArr[],int m, int n);
+    std::shared_ptr<AVL_node<T,S>> sortedArrayToAVLtree(T infoArr[], S keyArr[],int start, int end,std::shared_ptr<AVL_node<T,S>> father);
+    std::shared_ptr<AVL_node<T,S>> mergeAvlTrees(std::shared_ptr<AVL_node<T,S>> root1, std::shared_ptr<AVL_node<T,S>> root2,
+                                                                T mergedInfoArr[] ,int m, int n);
+
+
 
 
 };
+
+
+
+
+template <class T, class S>
+std::shared_ptr<AVL_node<T,S>> AVL_node<T,S>::mergeAvlTrees(std::shared_ptr<AVL_node<T,S>> root1, std::shared_ptr<AVL_node<T,S>> root2,
+                                                            T mergedInfoArr[] ,int m, int n)
+{
+    S *arr1keys = new S[m];
+    T *arr1Info = new T[m];
+    int i = 0;
+
+    storeInorder(root1, arr1Info,arr1keys, &i);
+
+    S *arr2keys = new S[n];
+    T *arr2Info = new T[n];
+    int j = 0;
+    storeInorder(root2, arr2Info,arr2keys, &j);
+
+    S *mergedkeyArr = merge(arr1Info,arr1keys, arr2Info, arr2keys,mergedInfoArr, m, n);
+
+    std::shared_ptr<AVL_node<T,S>> mergedTrees = sortedArrayToAVLtree (mergedInfoArr,mergedkeyArr, 0, m + n - 1, nullptr);
+
+    delete [] arr1keys;
+    delete [] arr1Info;
+    delete [] arr2keys;
+    delete [] arr2Info;
+    delete [] mergedkeyArr;
+
+    return mergedTrees;
+}
+
+
+template <class T, class S>
+std::shared_ptr<AVL_node<T,S>> AVL_node<T,S>::sortedArrayToAVLtree(T infoArr[], S keyArr[],int start, int end,std::shared_ptr<AVL_node<T,S>> father)
+{
+    if(start > end)
+        return NULL;
+
+    int mid = (start+end)/2;
+    std::shared_ptr<AVL_node<T,S>> node = (std::make_shared<AVL_node>(keyArr[mid],infoArr[mid]));
+    node->father = father;
+    node->left_son = sortedArrayToAVLtree(infoArr, keyArr,start, mid -1, node);
+    node->right_son = sortedArrayToAVLtree(infoArr,keyArr, mid + 1, end, node);
+    node->updateHeight();
+    node->updateBF();
+    return node;
+}
+
+template <class T, class S>
+void AVL_node<T,S>::storeInorder(std::shared_ptr<AVL_node<T,S>> avlNode, T inorderInfoArr[], S inorderKeyArr[], int *index_ptr)
+{
+    if (avlNode == NULL)
+        return;
+
+    /* first recur on left child */
+    storeInorder(avlNode->left_son, inorderInfoArr,inorderKeyArr, index_ptr);
+
+    inorderInfoArr[*index_ptr] = avlNode->info;
+    inorderKeyArr[*index_ptr] = avlNode->key;
+    (*index_ptr)++; // increase index for next entry
+
+    /* now recur on right child */
+    storeInorder(avlNode->right_son, inorderInfoArr,inorderKeyArr, index_ptr);
+}
+
+template <class T, class S>
+S * AVL_node<T,S>::merge(T arr1Info[], S arr1Key[],T arr2Info[], S arr2Key[], T mergedInfoArr[],int m, int n)
+{
+    S *mergedKeyArr = new S[m + n];
+    int i = 0, j = 0, k = 0;
+    while (i < m && j < n)
+    {
+        // Pick the smaller element and put it in mergedArr
+        if (arr1Key[i] < arr2Key[j])
+        {
+
+            mergedKeyArr[k] = arr1Key[i];
+            mergedInfoArr[k] = arr1Info[i];
+            i++;
+        }
+        else
+        {
+            mergedKeyArr[k] = arr2Key[j];
+            mergedInfoArr[k] = arr2Info[j];
+            j++;
+        }
+        k++;
+    }
+    while (i < m)
+    {
+        mergedKeyArr[k] = arr1Key[i];
+        mergedInfoArr[k] = arr1Info[i];
+        i++; k++;
+    }
+    while (j < n)
+    {
+        mergedKeyArr[k] = arr2Key[j];
+        mergedInfoArr[k] = arr2Info[j];
+        j++; k++;
+    }
+    return mergedKeyArr;
+}
+
+template <class T, class S>
+void AVL_node<T,S>::InOrderNumTimes(std::shared_ptr<AVL_node<T,S>> avlNode, int Players[], int *numOfPlayers,int count)
+{
+    if (avlNode == nullptr || *numOfPlayers == count)
+    {
+        return;
+    }
+
+    /* now recur on right child */
+    InOrderNumTimes(avlNode->getLeft_son(), Players, numOfPlayers,count);
+
+    Players[*numOfPlayers] = avlNode->getInfo().getId();
+    (*numOfPlayers)++; // increase index for next entry
+
+    /* first recur on left child */
+
+    InOrderNumTimes(avlNode->getRight_son(), Players, numOfPlayers,count);
+}
+
+template <class T, class S>
+void AVL_node<T,S>::reverseInOrderNumTimes(std::shared_ptr<AVL_node<T,S>> avlNode, int Players[], int *numOfPlayers,int count)
+{
+    if (avlNode == nullptr || *numOfPlayers == count)
+    {
+        return;
+    }
+
+    /* now recur on right child */
+    reverseInOrderNumTimes(avlNode->getRight_son(), Players, numOfPlayers,count);
+
+    Players[*numOfPlayers] = avlNode->getInfo().getId();
+    (*numOfPlayers)++; // increase index for next entry
+
+    /* first recur on left child */
+    reverseInOrderNumTimes(avlNode->getLeft_son(), Players, numOfPlayers,count);
+
+}
+
+
 
 
 template <class T, class S>
@@ -383,8 +537,6 @@ std::shared_ptr<AVL_node<T,S>> AVL_node<T,S>::rightRotation(std::shared_ptr<AVL_
     return new_root;
 
 }
-
-
 
 
 template<class T,class S>
