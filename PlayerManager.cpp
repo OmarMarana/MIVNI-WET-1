@@ -531,7 +531,7 @@ StatusType PlayerManager::PMReplaceGroup( int GroupID, int ReplacementID)
 
         }
 
-        this->max_level_group_tree->deleteNode(this->max_level_group_tree,GroupID);
+        this->max_level_group_tree=this->max_level_group_tree->deleteNode(this->max_level_group_tree,GroupID);
 
         delete [] mergedInfoArr;
 
