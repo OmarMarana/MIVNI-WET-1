@@ -17,11 +17,36 @@ void fun(std::shared_ptr<AVL_node<LevelAndId,LevelAndId>> sp)
 static void inOrderAndUpdateGroupNode(std::shared_ptr<AVL_node<LevelAndId,LevelAndId>> root,
                                       std::shared_ptr<AVL_node<group,int>> new_group_node );
 
+
+static void detachPlayerGroupNode(std::shared_ptr<AVL_node<player,int>> player_node)
+{
+    player_node->getInfo().setPlayerGnode(nullptr);
+}
+
+static void detachLIPlayerNode(std::shared_ptr<AVL_node<LevelAndId,LevelAndId>> LI_node)
+{
+    LI_node->getInfo().setPlayer_node(nullptr);
+}
+
+static void detachGroupPlayersNode(std::shared_ptr<AVL_node<group,int>> group_node)
+{
+    group_node->getInfo().getPlayers_tree()->inOrder(group_node->getInfo().getPlayers_tree(),detachLIPlayerNode);
+}
+
+
+
 PlayerManager::~PlayerManager()
 {
     this->level_and_id_player_tree->postOrderAndDestroy(this->level_and_id_player_tree);
+
+    this->int_player_tree->inOrder(this->int_player_tree, detachPlayerGroupNode);
+    this->group_tree->inOrder(this->group_tree,detachGroupPlayersNode);
+
     this->int_player_tree->postOrderAndDestroy(this->int_player_tree);
+
+
     this->group_tree->postOrderAndDestroy(this->group_tree);
+
     this->max_level_group_tree->postOrderAndDestroy(this->max_level_group_tree);
 }
 
@@ -186,7 +211,7 @@ StatusType PlayerManager::PMRemovePlayer( int PlayerID)
 
         std::shared_ptr<AVL_node<LevelAndId,LevelAndId>> LI_node_in_group_subtree =
                 player_node->getInfo().getGroup_node()->getInfo().getPlayers_tree()->find(
-                player_node->getInfo().getGroup_node()->getInfo().getPlayers_tree(),player_to_remove_LI);
+                        player_node->getInfo().getGroup_node()->getInfo().getPlayers_tree(),player_to_remove_LI);
 
         LI_node_in_group_subtree->getInfo().setPlayer_node(nullptr);
 
@@ -198,8 +223,8 @@ StatusType PlayerManager::PMRemovePlayer( int PlayerID)
 
 //        fun(LI_node_in_group_subtree);
         player_node->getInfo().getGroup_node()->getInfo().setPlayers_tree
-        (player_node->getInfo().getGroup_node()->getInfo().getPlayers_tree()->deleteNode(
-                player_node->getInfo().getGroup_node()->getInfo().getPlayers_tree(),player_to_remove_LI
+                (player_node->getInfo().getGroup_node()->getInfo().getPlayers_tree()->deleteNode(
+                        player_node->getInfo().getGroup_node()->getInfo().getPlayers_tree(),player_to_remove_LI
                 ));
 
 
@@ -220,7 +245,7 @@ StatusType PlayerManager::PMRemovePlayer( int PlayerID)
                         .getPlayers_tree()->getNodeWithBiggestKey(player_node->getInfo().getGroup_node()->getInfo().getPlayers_tree());
                 player_node->getInfo().getGroup_node()->getInfo().set_max_level_player(new_max_player_in_group); // write this func
                 this->max_level_group_tree->find(this->max_level_group_tree,player_node->getInfo().getGroup_node()->
-                getInfo().getGroupID())->setInfo(new_max_player_in_group->getKey()) ;// implement
+                        getInfo().getGroupID())->setInfo(new_max_player_in_group->getKey()) ;// implement
                 //changed avlnode setinfo from referencce arg to copy constructor arg, check if this change influences the other functions we wrote ctrl+F setinfo
                 new_max_player_in_group = nullptr;
             }
@@ -415,7 +440,7 @@ StatusType PlayerManager::PMIncreaseLevel( int PlayerID, int LevelIncrease)
 
         std::shared_ptr<AVL_node<group,int>> group_node = player_node->getInfo().getGroup_node();
         group_node->getInfo().setPlayers_tree(group_node->getInfo().getPlayers_tree()->
-        deleteNode(group_node->getInfo().getPlayers_tree(),player_LI));
+                deleteNode(group_node->getInfo().getPlayers_tree(),player_LI));
 
 
         LevelAndId new_LI(player_LI.getLevel() + LevelIncrease, PlayerID, player_node);
@@ -429,7 +454,7 @@ StatusType PlayerManager::PMIncreaseLevel( int PlayerID, int LevelIncrease)
         if(group_node->getInfo().getMax_level_player()->getKey() < tmp_LI)
         {
             group_node->getInfo().set_max_level_player(group_node->getInfo().getPlayers_tree()->
-            find(group_node->getInfo().getPlayers_tree(),tmp_LI));
+                    find(group_node->getInfo().getPlayers_tree(),tmp_LI));
             this->max_level_group_tree->find(this->max_level_group_tree, group_node->getKey())->setInfo(tmp_LI);
         }
 
@@ -455,7 +480,7 @@ StatusType PlayerManager::PMReplaceGroup( int GroupID, int ReplacementID)
         return  INVALID_INPUT;
     }
     if(this->group_tree->find(this->group_tree, GroupID) == nullptr || this->group_tree->find(this->group_tree, ReplacementID) ==
-                                                                               nullptr)
+                                                                       nullptr)
     {
         return  FAILURE;
     }
@@ -481,10 +506,12 @@ StatusType PlayerManager::PMReplaceGroup( int GroupID, int ReplacementID)
 
 
         std::shared_ptr<AVL_node<LevelAndId,LevelAndId>> merged_player_trees = GroupId_subtree->mergeAvlTrees(GroupId_subtree,
-                              ReplacementID_subtree,mergedInfoArr,GroupId_num_of_players, ReplacementId_num_of_players);
+                                                                                                              ReplacementID_subtree,mergedInfoArr,GroupId_num_of_players, ReplacementId_num_of_players);
+        ReplacementID_node->getInfo().setnNum_of_players(GroupId_num_of_players );
 
         ReplacementID_subtree->postOrderAndDestroy(ReplacementID_subtree);
         GroupId_subtree->postOrderAndDestroy(GroupId_subtree);
+        this->num_of_non_empty_groups--;
 
         ReplacementID_subtree = nullptr;
         GroupId_subtree = nullptr;

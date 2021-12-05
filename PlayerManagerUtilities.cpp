@@ -79,6 +79,7 @@ void player::setPlayerGnode(std::shared_ptr<AVL_node<group,int>> gnode)
 group::~group()
 {
     group_players_tree->postOrderAndDestroy(group_players_tree);
+    group_players_tree = nullptr;
     max_level_player = nullptr; // check that it dosnt point to family
 
 }

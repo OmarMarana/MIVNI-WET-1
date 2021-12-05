@@ -264,20 +264,25 @@ int main() {
     res1 = pm1.PMAddGroup(7);
     res1 = pm1.PMAddGroup(2);
     res1 = pm1.PMAddGroup(10);
-
+//
     if(res1 != SUCCESS)
     {
         std::cout << "PMAddGroup FAILED" << std::endl;
     }
-
+//
     StatusType res2 = pm1.PMAddPlayer(1,7,5);
-    res2 = pm1.PMAddPlayer(3,7,3);
+    res2 = pm1.PMAddPlayer(3,2,3);
     res2 = pm1.PMAddPlayer(5,7,3);
+//
 
+//     res2 = pm1.PMRemovePlayer(1);
+//    res2 = pm1.PMRemovePlayer(3);
     if(res2 != SUCCESS)
     {
         std::cout << "PMAddpLAYER FAILED" << std::endl;
     }
+
+
 
     StatusType res3 = pm1.PMRemovePlayer(3);
     res3 = pm1.PMRemovePlayer(1);
@@ -315,8 +320,9 @@ int main() {
         std::cout << "PMGetAllPlayersByLevel FAILED" << std::endl;
     }
 
+    free(Players);
 
-     res4 = pm1.PMGetHighestLevel(-2,&pID);
+    res4 = pm1.PMGetHighestLevel(-2,&pID);
     if(res4 != SUCCESS)
     {
         std::cout << "PMGetHighestLevel FAILED" << std::endl;
@@ -329,15 +335,23 @@ int main() {
         std::cout << "PMGetAllPlayersByLevel FAILED" << std::endl;
     }
 
+//    Player1 = nullptr;
+    free(Player1);
+
     StatusType res7 = pm1.PMIncreaseLevel(7,2);
     if(res7 != SUCCESS)
     {
         std::cout << "PMGetAllPlayersByLevel FAILED" << std::endl;
     }
 
+    StatusType res8 = pm1.PMReplaceGroup(2,7);
+    if(res8 != SUCCESS)
+    {
+        std::cout << "PMReplaceGroup FAILED" << std::endl;
+    }
 
 
-    PrintAll(Player1, 2);
+//    PrintAll(Player1, 2);
 
     std::cout << "id is " << pID << std::endl;
 //    pm1.Getgroup_tree()->inOrder(pm1.Getgroup_tree(),printNode);
