@@ -33,7 +33,7 @@ public:
     LevelAndId(int Level, int Id, std::shared_ptr<AVL_node<player,int>> player_node) : Level(Level) , Id(Id), player_node(player_node){};
     LevelAndId() : Level(0) , Id(0), player_node(nullptr){};
     ~LevelAndId();
-    LevelAndId(const LevelAndId&) = default;
+    LevelAndId(const LevelAndId& other) ;
     LevelAndId& operator=(const LevelAndId& other) = default;
 
     int getId() const;

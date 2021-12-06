@@ -383,6 +383,7 @@ static errorType OnGetGroupsHighestLevel(void* DS, const char* const command) {
     int numOfGroups;
     ValidateRead(sscanf(command, "%d", &numOfGroups), 1,
                  "GetGroupsHighestLevel failed.\n");
+//	int* playerIDs = (int*)malloc(sizeof(int) * numOfGroups);
     int* playerIDs;
     StatusType res = GetGroupsHighestLevel(DS, numOfGroups, &playerIDs);
 

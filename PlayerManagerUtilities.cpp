@@ -129,8 +129,18 @@ group& group::operator=(const group& other) // group1 = group2
     max_level_player = nullptr; // check that it dosnt point to family
 
     //cpy_const
-    this->group_players_tree = other.group_players_tree->clone( other.group_players_tree, other.group_players_tree->getFather());
-    this->max_level_player = this->group_players_tree->find(this->group_players_tree, other.max_level_player->getKey());
+    if(other.group_players_tree == nullptr)
+    {
+        this->group_players_tree = nullptr;
+
+    }
+    else
+    {
+        this->group_players_tree = other.group_players_tree->clone( other.group_players_tree, other.group_players_tree->getFather());
+        this->max_level_player = this->group_players_tree->find(this->group_players_tree, other.max_level_player->getKey());
+    }
+
+
 
     return *this;
 }
@@ -260,6 +270,12 @@ LevelAndId::~LevelAndId()
 void  LevelAndId::setPlayer_node(std::shared_ptr<AVL_node<player,int>> new_player_node)
 {
     this->player_node = new_player_node;
+}
+
+LevelAndId::LevelAndId(const LevelAndId& other ) : Level(other.Level),Id(other.Id)
+{
+    this->player_node = nullptr;
+    this->player_node = other.player_node;
 }
 
 

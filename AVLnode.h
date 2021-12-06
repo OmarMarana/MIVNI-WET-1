@@ -91,7 +91,7 @@ public:
     S * merge(T arr1Info[], S arr1Key[],T arr2Info[], S arr2Key[], T mergedInfoArr[],int m, int n);
     std::shared_ptr<AVL_node<T,S>> sortedArrayToAVLtree(T infoArr[], S keyArr[],int start, int end,std::shared_ptr<AVL_node<T,S>> father);
     std::shared_ptr<AVL_node<T,S>> mergeAvlTrees(std::shared_ptr<AVL_node<T,S>> root1, std::shared_ptr<AVL_node<T,S>> root2,
-                                                                T mergedInfoArr[] ,int m, int n);
+                                                 T mergedInfoArr[] ,int m, int n);
 
 
 
@@ -204,20 +204,30 @@ S * AVL_node<T,S>::merge(T arr1Info[], S arr1Key[],T arr2Info[], S arr2Key[], T 
 template <class T, class S>
 void AVL_node<T,S>::InOrderNumTimes(std::shared_ptr<AVL_node<T,S>> avlNode, int Players[], int *numOfPlayers,int count)
 {
-    if (avlNode == nullptr || *numOfPlayers == count)
+    if (avlNode == nullptr || *numOfPlayers >= count )
     {
         return;
     }
+    if(*numOfPlayers < count  )
+    {
+        InOrderNumTimes(avlNode->getLeft_son(), Players, numOfPlayers,count);
+        Players[*numOfPlayers] = avlNode->getInfo().getId();
+        (*numOfPlayers)++; // increase index for next entry
+        if(*numOfPlayers >= count )
+        {
+            return;
+        }
+        InOrderNumTimes(avlNode->getRight_son(), Players, numOfPlayers,count);
 
-    /* now recur on right child */
-    InOrderNumTimes(avlNode->getLeft_son(), Players, numOfPlayers,count);
-
-    Players[*numOfPlayers] = avlNode->getInfo().getId();
-    (*numOfPlayers)++; // increase index for next entry
-
-    /* first recur on left child */
-
-    InOrderNumTimes(avlNode->getRight_son(), Players, numOfPlayers,count);
+    }
+//    InOrderNumTimes(avlNode->getLeft_son(), Players, numOfPlayers,count);
+//    Players[*numOfPlayers] = avlNode->getInfo().getId();
+//    (*numOfPlayers)++; // increase index for next entry
+//    if(*numOfPlayers >= count )
+//    {
+//        return;
+//    }
+//    InOrderNumTimes(avlNode->getRight_son(), Players, numOfPlayers,count);
 }
 
 template <class T, class S>
@@ -544,7 +554,7 @@ std::shared_ptr<AVL_node<T,S>> AVL_node<T,S>::find(std::shared_ptr<AVL_node<T,S>
 {
     // std::shared_ptr<AVL_node<T,S>> tmp = this;
 //    std::shared_ptr<AVL_node<T,S>> tmp = (std::make_shared<AVL_node>(*this));
-     std::shared_ptr<AVL_node<T,S>> tmp = root;
+    std::shared_ptr<AVL_node<T,S>> tmp = root;
     // std::shared_ptr<AVL_node<T,S>> tmp(std::make_shared<AVL_node>(*this)); // maybe need <T,S>
 
     while(tmp != nullptr)
@@ -593,14 +603,14 @@ std::shared_ptr<AVL_node<T,S>> AVL_node<T,S>::deleteNode(std::shared_ptr<AVL_nod
         std::shared_ptr<AVL_node<T,S>> NextInOrderVal = node_to_delete->getNextInOrderVal();
         // node_to_delete->SwapInfoAndKey(getNextInOrderVal(node_to_delete));
         node_to_delete->SwapInfoAndKey(NextInOrderVal);
-       // if(NextInOrderVal->right_son == nullptr || NextInOrderVal->left_son)
-      //  {
-            return deleteNodeHelper(NextInOrderVal,root);
-      //  }
+        // if(NextInOrderVal->right_son == nullptr || NextInOrderVal->left_son)
+        //  {
+        return deleteNodeHelper(NextInOrderVal,root);
+        //  }
 
-      //  std::cout << node_to_delete->key << " " << node_to_delete->info << std::endl;
-      //  std::cout << node_to_delete->getNextInOrderVal()->key << " " << node_to_delete->getNextInOrderVal()->info << std::endl;
-       // return deleteNode(root,key);
+        //  std::cout << node_to_delete->key << " " << node_to_delete->info << std::endl;
+        //  std::cout << node_to_delete->getNextInOrderVal()->key << " " << node_to_delete->getNextInOrderVal()->info << std::endl;
+        // return deleteNode(root,key);
     }
 
     return root; // not supposed to get here bcus all option are taken care of
@@ -843,7 +853,7 @@ std::shared_ptr<AVL_node<T,S>> AVL_node<T,S>::deleteNodeHelper(std::shared_ptr<A
 
 template<class T,class S>
 std::shared_ptr<AVL_node<T,S>> AVL_node<T,S>::clone(const std::shared_ptr<AVL_node<T,S>> root
-, const std::shared_ptr<AVL_node<T,S>> parent)
+        , const std::shared_ptr<AVL_node<T,S>> parent)
 {
 
     if(root == nullptr)
