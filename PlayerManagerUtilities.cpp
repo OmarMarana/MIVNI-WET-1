@@ -137,6 +137,13 @@ group& group::operator=(const group& other) // group1 = group2
     else
     {
         this->group_players_tree = other.group_players_tree->clone( other.group_players_tree, other.group_players_tree->getFather());
+    }
+    if(other.max_level_player == nullptr)
+    {
+        this->max_level_player = nullptr;
+    }
+    else
+    {
         this->max_level_player = this->group_players_tree->find(this->group_players_tree, other.max_level_player->getKey());
     }
 
