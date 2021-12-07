@@ -407,7 +407,7 @@ StatusType PlayerManager::PMGetGroupsHighestLevel( int numOfGroups, int **Player
             return ALLOCATION_ERROR;
         }
         int numOfgroups = 0;
-//        this->max_level_group_tree->InOrderNumTimes(this->max_level_group_tree,*Players,&numOfgroups,numOfGroups);
+        this->max_level_group_tree->InOrderNumTimes(this->max_level_group_tree,*Players,&numOfgroups,numOfGroups);
 
 
     }

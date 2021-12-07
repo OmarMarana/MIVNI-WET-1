@@ -211,6 +211,10 @@ void AVL_node<T,S>::InOrderNumTimes(std::shared_ptr<AVL_node<T,S>> avlNode, int 
     if(*numOfPlayers < count  )
     {
         InOrderNumTimes(avlNode->getLeft_son(), Players, numOfPlayers,count);
+        if(*numOfPlayers >= count )
+        {
+            return;
+        }
         Players[*numOfPlayers] = avlNode->getInfo().getId();
         (*numOfPlayers)++; // increase index for next entry
         if(*numOfPlayers >= count )
