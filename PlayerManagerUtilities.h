@@ -123,6 +123,8 @@ public:
     void setPlayers_tree(std::shared_ptr<AVL_node<LevelAndId,LevelAndId>>new_group_players_tree ) ;
     void set_max_level_player(std::shared_ptr<AVL_node<LevelAndId,LevelAndId>> new_max_level_player) ;
     void setnNum_of_players(int delta);
+    void updatePlayerTreeLI(std::shared_ptr<AVL_node<LevelAndId,LevelAndId>> root,
+                                   std::shared_ptr<AVL_node<player,int>> new_player_node );
 };
 
 //******************************************************

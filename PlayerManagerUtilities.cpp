@@ -37,7 +37,6 @@ player& player::operator=(const player& other)
     //max_level_player = nullptr; // check that it dosnt point to family
     //group& group::operator=(const group& other)
     return *this;
-
 }
 
 
@@ -76,13 +75,7 @@ void player::setPlayerGnode(std::shared_ptr<AVL_node<group,int>> gnode)
 
 
 
-group::~group()
-{
-    group_players_tree->postOrderAndDestroy(group_players_tree);
-    group_players_tree = nullptr;
-    max_level_player = nullptr; // check that it dosnt point to family
 
-}
 
 
 group::group(const group& other) : groupID(other.groupID),num_of_players(other.num_of_players)  // copy constructor
@@ -119,14 +112,41 @@ group::group(const group& other) : groupID(other.groupID),num_of_players(other.n
 
 }
 
+void group::updatePlayerTreeLI(std::shared_ptr<AVL_node<LevelAndId,LevelAndId>> root,
+                        std::shared_ptr<AVL_node<player,int>> new_player_node )
+{
+    if(root == nullptr)
+    {
+        return;
+    }
+    updatePlayerTreeLI(root->getLeft_son(), new_player_node);
+    root->getInfo().setPlayer_node(new_player_node);
+    updatePlayerTreeLI(root->getRight_son(), new_player_node);
+}
+
+static void inOrderAndUpdateGroupNode(std::shared_ptr<AVL_node<LevelAndId,LevelAndId>> root,
+                                      std::shared_ptr<AVL_node<group,int>> new_group_node )
+{
+    if(root == nullptr)
+    {
+        return;
+    }
+    inOrderAndUpdateGroupNode(root->getLeft_son(), new_group_node);
+    root->getInfo().getPlayer_node()->getInfo().setPlayerGnode(new_group_node);
+    inOrderAndUpdateGroupNode(root->getRight_son(), new_group_node);
+}
 
 group& group::operator=(const group& other) // group1 = group2
 {
     this->groupID = other.groupID;
     this->num_of_players = other.num_of_players;
     //dest
-    group_players_tree->postOrderAndDestroy(group_players_tree);
     max_level_player = nullptr; // check that it dosnt point to family
+//
+    inOrderAndUpdateGroupNode(group_players_tree, nullptr);
+    updatePlayerTreeLI(group_players_tree, nullptr);
+    group_players_tree->postOrderAndDestroy(group_players_tree);
+
 
     //cpy_const
     if(other.group_players_tree == nullptr)
@@ -145,6 +165,8 @@ group& group::operator=(const group& other) // group1 = group2
     return *this;
 }
 
+
+
 // bool operator==(const group& group1, const group& group2)
 // {
 //     //shared_ptr find(groups, int)
@@ -156,6 +178,9 @@ int group::getGroupID() const
 {
     return this->groupID;
 }
+
+
+
 
 
 std::shared_ptr<AVL_node<LevelAndId,LevelAndId>> group::getPlayers_tree() const
@@ -191,6 +216,19 @@ int group::get_num_of_players() const
     return this->num_of_players;
 }
 
+
+
+group::~group()
+{
+
+    max_level_player = nullptr; // check that it dosnt point to family
+    updatePlayerTreeLI(group_players_tree, nullptr);
+    inOrderAndUpdateGroupNode(group_players_tree, nullptr);
+    group_players_tree->postOrderAndDestroy(group_players_tree);
+    group_players_tree = nullptr;
+
+
+}
 
 //******************************************************
 //******************************************************

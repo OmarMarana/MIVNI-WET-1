@@ -441,6 +441,7 @@ StatusType PlayerManager::PMIncreaseLevel( int PlayerID, int LevelIncrease)
                 level_and_id_player_tree->find(this->level_and_id_player_tree,tmp_LI));
 
         std::shared_ptr<AVL_node<group,int>> group_node = player_node->getInfo().getGroup_node();
+        LevelAndId max_player_LI = group_node->getInfo().getMax_level_player()->getKey();
         group_node->getInfo().setPlayers_tree(group_node->getInfo().getPlayers_tree()->
                 deleteNode(group_node->getInfo().getPlayers_tree(),player_LI));
 
@@ -497,11 +498,13 @@ StatusType PlayerManager::PMReplaceGroup( int GroupID, int ReplacementID)
         inOrderAndUpdateGroupNode(GroupId_subtree,ReplacementID_node);
 
 
-        std::shared_ptr<AVL_node<LevelAndId,LevelAndId>> GroupId_max_player =  GroupID_node->getInfo().getMax_level_player();
+//        std::shared_ptr<AVL_node<LevelAndId,LevelAndId>> GroupId_max_player =  GroupID_node->getInfo().getMax_level_player();
         int GroupId_num_of_players = GroupID_node->getInfo().get_num_of_players();
+        LevelAndId GroupId_max_player_LI = GroupID_node->getInfo().getMax_level_player()->getKey();
 
-        std::shared_ptr<AVL_node<LevelAndId,LevelAndId>> ReplacementId_max_player =  ReplacementID_node->getInfo().getMax_level_player();
+//        std::shared_ptr<AVL_node<LevelAndId,LevelAndId>> ReplacementId_max_player =  ReplacementID_node->getInfo().getMax_level_player();
         int ReplacementId_num_of_players = ReplacementID_node->getInfo().get_num_of_players();
+        LevelAndId ReplacementID_max_player_LI = ReplacementID_node->getInfo().getMax_level_player()->getKey();
 
 
         LevelAndId * mergedInfoArr = new LevelAndId[ReplacementId_num_of_players + GroupId_num_of_players];
@@ -511,8 +514,18 @@ StatusType PlayerManager::PMReplaceGroup( int GroupID, int ReplacementID)
                                                                                                               ReplacementID_subtree,mergedInfoArr,GroupId_num_of_players, ReplacementId_num_of_players);
         ReplacementID_node->getInfo().setnNum_of_players(GroupId_num_of_players );
 
+        GroupID_node->getInfo().set_max_level_player(nullptr);
+        ReplacementID_node->getInfo().set_max_level_player(nullptr);
+
+
+        ReplacementID_node->getInfo().updatePlayerTreeLI(ReplacementID_subtree, nullptr);
         ReplacementID_subtree->postOrderAndDestroy(ReplacementID_subtree);
+        ReplacementID_node->getInfo().setPlayers_tree(nullptr);
+
+        GroupID_node->getInfo().updatePlayerTreeLI(GroupId_subtree, nullptr);
         GroupId_subtree->postOrderAndDestroy(GroupId_subtree);
+        GroupID_node->getInfo().setPlayers_tree(nullptr);
+
         this->num_of_non_empty_groups--;
 
         ReplacementID_subtree = nullptr;
@@ -520,27 +533,32 @@ StatusType PlayerManager::PMReplaceGroup( int GroupID, int ReplacementID)
 
         ReplacementID_node->getInfo().setPlayers_tree(merged_player_trees);
 
-
+        GroupID_node = nullptr;
         this->group_tree = this->group_tree->deleteNode(this->group_tree, GroupID);
 
-
-        if(GroupId_max_player->getKey() > ReplacementId_max_player->getKey() )
+        //maybe the GroupId_max_player prevents the delete tree op to fail
+        if(GroupId_max_player_LI > ReplacementID_max_player_LI )
         {
             ReplacementID_node->getInfo().set_max_level_player(this->group_tree->find( this->group_tree,ReplacementID)->getInfo().getPlayers_tree()->find(
-                    this->group_tree->find( this->group_tree,ReplacementID)->getInfo().getPlayers_tree(),GroupId_max_player->getKey()));
+                    this->group_tree->find( this->group_tree,ReplacementID)->getInfo().getPlayers_tree(),GroupId_max_player_LI));
 
-            this->max_level_group_tree->find(this->max_level_group_tree, ReplacementID)->setInfo(GroupId_max_player->getKey());
-
+            this->max_level_group_tree->find(this->max_level_group_tree, ReplacementID)->setInfo(GroupId_max_player_LI);
         }
+        else
+        {
+            ReplacementID_node->getInfo().set_max_level_player(ReplacementID_node->getInfo().getPlayers_tree()->find(ReplacementID_node->getInfo().getPlayers_tree()
+                    ,ReplacementID_max_player_LI));
+        }
+
+
 
         this->max_level_group_tree=this->max_level_group_tree->deleteNode(this->max_level_group_tree,GroupID);
 
         delete [] mergedInfoArr;
 
         merged_player_trees = nullptr;
-        ReplacementId_max_player = nullptr;
-        GroupId_max_player = nullptr;
-        GroupID_node = nullptr;
+
+
         ReplacementID_node = nullptr;
 
 

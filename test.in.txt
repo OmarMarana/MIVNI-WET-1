@@ -199,7 +199,6 @@ AddPlayer 1243 162 3
 AddPlayer 577 162 9
 IncreaseLevel 674 4
 IncreaseLevel 1890 5
-ReplaceGroup 96 17
 GetGroupsHighestLevel 14
 ReplaceGroup 68 152
 GetAllPlayersByLevel -1
@@ -353,6 +352,9 @@ RemovePlayer 1564
 ReplaceGroup 161 96
 GetGroupsHighestLevel 8
 IncreaseLevel 736 5
+
+
+
 IncreaseLevel 1921 1
 RemovePlayer 1991
 AddGroup 58
