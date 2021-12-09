@@ -157,6 +157,7 @@ group& group::operator=(const group& other) // group1 = group2
     else
     {
         this->group_players_tree = other.group_players_tree->clone( other.group_players_tree, other.group_players_tree->getFather());
+        inOrderAndUpdateGroupNode(group_players_tree, nullptr); // instead of null give the real new <group,int>
         this->max_level_player = this->group_players_tree->find(this->group_players_tree, other.max_level_player->getKey());
     }
 
@@ -222,8 +223,18 @@ group::~group()
 {
 
     max_level_player = nullptr; // check that it dosnt point to family
+    //******************************************
+    //before this operation check if the group has players and if the players are pointing to this group
+    //if the players aren't pointing to this group this it means that this group was assigned to some other group
+    //and the players that once belonged to this group no more belong
+    if(num_of_players > 0 && group_players_tree->getInfo().getPlayer_node()->getInfo().getGroup_node()->getInfo().getGroupID() == groupID)
+    {
+        //this happens only if the players still belong to this group
+        inOrderAndUpdateGroupNode(group_players_tree, nullptr);
+    }
 
-    inOrderAndUpdateGroupNode(group_players_tree, nullptr);
+
+    //******************************************
     updatePlayerTreeLI(group_players_tree, nullptr);
     group_players_tree->postOrderAndDestroy(group_players_tree);
     group_players_tree = nullptr;
