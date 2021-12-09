@@ -138,11 +138,15 @@ static void inOrderAndUpdateGroupNode(std::shared_ptr<AVL_node<LevelAndId,LevelA
 
 group& group::operator=(const group& other) // group1 = group2
 {
+
+    std::shared_ptr<AVL_node<group,int>> group_node =
+
     this->groupID = other.groupID;
     this->num_of_players = other.num_of_players;
     //dest
     max_level_player = nullptr; // check that it dosnt point to family
 //
+
     inOrderAndUpdateGroupNode(group_players_tree, nullptr);
     updatePlayerTreeLI(group_players_tree, nullptr);
     group_players_tree->postOrderAndDestroy(group_players_tree);
@@ -227,7 +231,7 @@ group::~group()
     //before this operation check if the group has players and if the players are pointing to this group
     //if the players aren't pointing to this group this it means that this group was assigned to some other group
     //and the players that once belonged to this group no more belong
-    if(num_of_players > 0 && group_players_tree->getInfo().getPlayer_node()->getInfo().getGroup_node()->getInfo().getGroupID() == groupID)
+    if(num_of_players > 0 && &(group_players_tree->getInfo().getPlayer_node()->getInfo().getGroup_node()->getInfo()) == this)
     {
         //this happens only if the players still belong to this group
         inOrderAndUpdateGroupNode(group_players_tree, nullptr);

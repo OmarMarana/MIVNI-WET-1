@@ -611,8 +611,8 @@ std::shared_ptr<AVL_node<T,S>> AVL_node<T,S>::deleteNode(std::shared_ptr<AVL_nod
     {
         std::shared_ptr<AVL_node<T,S>> NextInOrderVal = node_to_delete->getNextInOrderVal();
         // node_to_delete->SwapInfoAndKey(getNextInOrderVal(node_to_delete));
-        node_to_delete->setKey(NextInOrderVal->getKey());
-        node_to_delete->setInfo(NextInOrderVal->getInfo());
+//        node_to_delete->setKey(NextInOrderVal->getKey());
+//        node_to_delete->setInfo(NextInOrderVal->getInfo());
 
 //        deleteNode(node_to_delete.right_son, NextInOrderVal);
 //        node_to_delete->SwapInfoAndKey(NextInOrderVal);
@@ -629,6 +629,42 @@ std::shared_ptr<AVL_node<T,S>> AVL_node<T,S>::deleteNode(std::shared_ptr<AVL_nod
     return root; // not supposed to get here bcus all option are taken care of
 
 }
+
+template<class T,class S>
+void AVL_node<T,S>::swapNodes(std::shared_ptr<AVL_node<T,S>> node_to_delete,std::shared_ptr<AVL_node<T,S>> NextInOrderVal)
+{
+    std::shared_ptr<AVL_node<T,S>> node_to_delete_father = node_to_delete->father;
+    std::shared_ptr<AVL_node<T,S>> node_to_delete_right_son = node_to_delete->right_son;
+    std::shared_ptr<AVL_node<T,S>> node_to_delete_left_son = node_to_delete->left_son;
+
+    std::shared_ptr<AVL_node<T,S>>  NextInOrderVal_father= NextInOrderVal->father;
+    std::shared_ptr<AVL_node<T,S>>  NextInOrderVal_right_son= NextInOrderVal->right_son;
+
+
+    if(NextInOrderVal->right_son == nullptr && NextInOrderVal->left_son== nullptr)
+    {
+        if(node_to_delete_father = nullptr)
+        {
+            NextInOrderVal->father = node_to_delete_father;
+            if(NextInOrderVal->father->left_son == NextInOrderVal)
+            {
+                NextInOrderVal->father->left_son = node_to_delete;
+            }
+            else
+            {
+                NextInOrderVal->father->right_son = node_to_delete;
+
+            }
+
+
+
+        }
+
+    }
+
+
+}
+
 
 
 
