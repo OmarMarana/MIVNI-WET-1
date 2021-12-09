@@ -222,8 +222,9 @@ group::~group()
 {
 
     max_level_player = nullptr; // check that it dosnt point to family
-    updatePlayerTreeLI(group_players_tree, nullptr);
+
     inOrderAndUpdateGroupNode(group_players_tree, nullptr);
+    updatePlayerTreeLI(group_players_tree, nullptr);
     group_players_tree->postOrderAndDestroy(group_players_tree);
     group_players_tree = nullptr;
 

@@ -58,6 +58,7 @@ public:
     std::shared_ptr<AVL_node<T,S>>  getNodeWithBiggestKey(std::shared_ptr< AVL_node<T,S> > root);
 
     void setInfo(T new_info);
+    void setKey(S new_key);
 
     S getKey();
     std::shared_ptr<AVL_node<T,S>> getFather();
@@ -98,7 +99,11 @@ public:
 
 };
 
-
+template <class T, class S>
+void AVL_node<T,S>::setKey(S new_key)
+{
+    this->key = new_key;
+}
 
 
 template <class T, class S>
@@ -606,7 +611,11 @@ std::shared_ptr<AVL_node<T,S>> AVL_node<T,S>::deleteNode(std::shared_ptr<AVL_nod
     {
         std::shared_ptr<AVL_node<T,S>> NextInOrderVal = node_to_delete->getNextInOrderVal();
         // node_to_delete->SwapInfoAndKey(getNextInOrderVal(node_to_delete));
-        node_to_delete->SwapInfoAndKey(NextInOrderVal);
+        node_to_delete->setKey(NextInOrderVal->getKey());
+        node_to_delete->setInfo(NextInOrderVal->getInfo());
+
+//        deleteNode(node_to_delete.right_son, NextInOrderVal);
+//        node_to_delete->SwapInfoAndKey(NextInOrderVal);
         // if(NextInOrderVal->right_son == nullptr || NextInOrderVal->left_son)
         //  {
         return deleteNodeHelper(NextInOrderVal,root);
