@@ -34,7 +34,7 @@ public:
     LevelAndId() : Level(0) , Id(0), player_node(nullptr){};
     ~LevelAndId();
     LevelAndId(const LevelAndId& other) ;
-    LevelAndId& operator=(const LevelAndId& other) = default;
+    LevelAndId& operator=(const LevelAndId& other);
 
     int getId() const;
     int getLevel() const;

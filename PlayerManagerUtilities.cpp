@@ -132,21 +132,21 @@ static void inOrderAndUpdateGroupNode(std::shared_ptr<AVL_node<LevelAndId,LevelA
         return;
     }
     inOrderAndUpdateGroupNode(root->getLeft_son(), new_group_node);
-    root->getInfo().getPlayer_node()->getInfo().setPlayerGnode(new_group_node);
+    if(root->getInfo().getPlayer_node() != nullptr)
+    {
+        root->getInfo().getPlayer_node()->getInfo().setPlayerGnode(new_group_node);
+    }
+
     inOrderAndUpdateGroupNode(root->getRight_son(), new_group_node);
 }
 
 group& group::operator=(const group& other) // group1 = group2
 {
-
-    std::shared_ptr<AVL_node<group,int>> group_node =
-
     this->groupID = other.groupID;
     this->num_of_players = other.num_of_players;
     //dest
     max_level_player = nullptr; // check that it dosnt point to family
 //
-
     inOrderAndUpdateGroupNode(group_players_tree, nullptr);
     updatePlayerTreeLI(group_players_tree, nullptr);
     group_players_tree->postOrderAndDestroy(group_players_tree);
@@ -161,7 +161,6 @@ group& group::operator=(const group& other) // group1 = group2
     else
     {
         this->group_players_tree = other.group_players_tree->clone( other.group_players_tree, other.group_players_tree->getFather());
-        inOrderAndUpdateGroupNode(group_players_tree, nullptr); // instead of null give the real new <group,int>
         this->max_level_player = this->group_players_tree->find(this->group_players_tree, other.max_level_player->getKey());
     }
 
@@ -169,15 +168,6 @@ group& group::operator=(const group& other) // group1 = group2
 
     return *this;
 }
-
-
-
-// bool operator==(const group& group1, const group& group2)
-// {
-//     //shared_ptr find(groups, int)
-
-
-// }
 
 int group::getGroupID() const
 {
@@ -227,18 +217,8 @@ group::~group()
 {
 
     max_level_player = nullptr; // check that it dosnt point to family
-    //******************************************
-    //before this operation check if the group has players and if the players are pointing to this group
-    //if the players aren't pointing to this group this it means that this group was assigned to some other group
-    //and the players that once belonged to this group no more belong
-    if(num_of_players > 0 && &(group_players_tree->getInfo().getPlayer_node()->getInfo().getGroup_node()->getInfo()) == this)
-    {
-        //this happens only if the players still belong to this group
-        inOrderAndUpdateGroupNode(group_players_tree, nullptr);
-    }
 
-
-    //******************************************
+    inOrderAndUpdateGroupNode(group_players_tree, nullptr);
     updatePlayerTreeLI(group_players_tree, nullptr);
     group_players_tree->postOrderAndDestroy(group_players_tree);
     group_players_tree = nullptr;
@@ -331,6 +311,17 @@ LevelAndId::LevelAndId(const LevelAndId& other ) : Level(other.Level),Id(other.I
     this->player_node = nullptr;
     this->player_node = other.player_node;
 }
+LevelAndId& LevelAndId::operator=(const LevelAndId& other)
+{
+    this->Level = other.Level;
+    this->Id = other.Id;
+
+    this->player_node = other.player_node;
+
+    return *this;
+
+}
+
 
 
 
