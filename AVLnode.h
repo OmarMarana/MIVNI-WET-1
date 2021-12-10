@@ -24,19 +24,10 @@ private:
 
 protected:
     int getBF();
-
-//    S getKey();
     int getHeight();
-//    std::shared_ptr<AVL_node<T,S>> getFather(); // maybe &
-//    std::shared_ptr<AVL_node<T,S>> getLeft_son();
-//    std::shared_ptr<AVL_node<T,S>> getRight_son();
     int max(int h1, int h2);
     std::shared_ptr<AVL_node<T,S>> getNextInOrderVal();
     void SwapInfoAndKey(std::shared_ptr<AVL_node<T,S>> avl_node);
-
-
-
-
 
 public:
     AVL_node() : BF(0) , info(), key(), height(0), father(nullptr),left_son(nullptr), right_son(nullptr){}; //constructor
@@ -47,16 +38,13 @@ public:
 
     std::shared_ptr<AVL_node<T,S>> insert(std::shared_ptr<AVL_node<T,S>> root,S key,T info); // change other to sharedptr
     std::shared_ptr<AVL_node<T,S>> deleteNode(std::shared_ptr<AVL_node<T,S>> root, S key);
-
     std::shared_ptr<AVL_node<T,S>> find(std::shared_ptr<AVL_node<T,S>> root,S key);
     std::shared_ptr<AVL_node<T,S>> leftRotation(std::shared_ptr<AVL_node<T,S>> root);
     std::shared_ptr<AVL_node<T,S>> rightRotation(std::shared_ptr<AVL_node<T,S>> root);
-
     std::shared_ptr<AVL_node<T,S>> treeBalance(std::shared_ptr<AVL_node<T,S>> avl_node);
     void updateHeight();
     void updateBF();
     T& getInfo();
-
     std::shared_ptr<AVL_node<T,S>>  getNodeWithBiggestKey(std::shared_ptr< AVL_node<T,S> > root);
 
     void setInfo(T new_info);
@@ -74,15 +62,9 @@ public:
     template<class DoSomething>
     void preOrder(std::shared_ptr<AVL_node<T,S>> root, DoSomething doSomething);
 
-    // template<class DoSomething>
-    // void postOrder(std::shared_ptr<AVL_node<T,S>> root, DoSomething doSomething);
     void postOrderAndDestroy(std::shared_ptr<AVL_node<T,S>> root);
-
     void NodePointSiblingsToNull(const std::shared_ptr<AVL_node<T,S>>& root);
-
     void updateHeightAndBF();
-    // void updateHeightAndBFSearchPath();
-
     void printBFAndHeight();
 
     std::shared_ptr<AVL_node<T,S>> deleteNodeHelper(std::shared_ptr<AVL_node<T,S>> node_to_delete, std::shared_ptr<AVL_node<T,S>> root);
@@ -159,14 +141,12 @@ void AVL_node<T,S>::storeInorder(std::shared_ptr<AVL_node<T,S>> avlNode, T inord
     if (avlNode == NULL)
         return;
 
-    /* first recur on left child */
     storeInorder(avlNode->left_son, inorderInfoArr,inorderKeyArr, index_ptr);
 
     inorderInfoArr[*index_ptr] = avlNode->info;
     inorderKeyArr[*index_ptr] = avlNode->key;
-    (*index_ptr)++; // increase index for next entry
+    (*index_ptr)++;
 
-    /* now recur on right child */
     storeInorder(avlNode->right_son, inorderInfoArr,inorderKeyArr, index_ptr);
 }
 
@@ -177,7 +157,6 @@ S * AVL_node<T,S>::merge(T arr1Info[], S arr1Key[],T arr2Info[], S arr2Key[], T 
     int i = 0, j = 0, k = 0;
     while (i < m && j < n)
     {
-        // Pick the smaller element and put it in mergedArr
         if (arr1Key[i] < arr2Key[j])
         {
 
@@ -231,14 +210,7 @@ void AVL_node<T,S>::InOrderNumTimes(std::shared_ptr<AVL_node<T,S>> avlNode, int 
         InOrderNumTimes(avlNode->getRight_son(), Players, numOfPlayers,count);
 
     }
-//    InOrderNumTimes(avlNode->getLeft_son(), Players, numOfPlayers,count);
-//    Players[*numOfPlayers] = avlNode->getInfo().getId();
-//    (*numOfPlayers)++; // increase index for next entry
-//    if(*numOfPlayers >= count )
-//    {
-//        return;
-//    }
-//    InOrderNumTimes(avlNode->getRight_son(), Players, numOfPlayers,count);
+
 }
 
 template <class T, class S>
@@ -249,19 +221,13 @@ void AVL_node<T,S>::reverseInOrderNumTimes(std::shared_ptr<AVL_node<T,S>> avlNod
         return;
     }
 
-    /* now recur on right child */
     reverseInOrderNumTimes(avlNode->getRight_son(), Players, numOfPlayers,count);
 
     Players[*numOfPlayers] = avlNode->getInfo().getId();
     (*numOfPlayers)++; // increase index for next entry
 
-    /* first recur on left child */
     reverseInOrderNumTimes(avlNode->getLeft_son(), Players, numOfPlayers,count);
-
 }
-
-
-
 
 template <class T, class S>
 std::shared_ptr<AVL_node<T,S>>  AVL_node<T,S>::getNodeWithBiggestKey(std::shared_ptr< AVL_node<T,S> > root)
@@ -385,11 +351,6 @@ AVL_node<T,S>& AVL_node<T,S>::operator=(const AVL_node<T,S>& other)
     left_son = other.left_son;
     right_son=other.right_son;
 
-
-
-
-
-
     return *this;
 }
 
@@ -400,12 +361,8 @@ std::shared_ptr<AVL_node<T,S>> AVL_node<T,S>::insert(std::shared_ptr< AVL_node<T
 {
     if(root == nullptr)
     {
-        // std::shared_ptr<AVL_node<T,S>> root(new AVL_node(key,info)); // make ptr with new if there is problems
         std::shared_ptr<AVL_node<T,S>> root = (std::make_shared<AVL_node>(key,info));
-
         return root;
-
-        //(*root)(key,info);
     }
     if(key < root->key)
     {
@@ -415,32 +372,21 @@ std::shared_ptr<AVL_node<T,S>> AVL_node<T,S>::insert(std::shared_ptr< AVL_node<T
             root->left_son->father = root;
         }
     }
-
-    if(key > root->key) //*****may be a bug here, check what Shelly did
+    if(key > root->key)
     {
-        //insert(root.getRight_son(), key, info);
+
         root->right_son = insert(root->getRight_son(), key, info);
         if(root->right_son->key == key)
         {
             root->right_son->father = root;
         }
     }
-//    root->updateHeight();
-//    root->updateBF();
-    //root = treeBalance(root); // remove from here and call the function after insert call
-
-
-
     return root;
-
-
 }
 
 template<class T,class S>
 std::shared_ptr<AVL_node<T,S>>  AVL_node<T,S>::treeBalance(std::shared_ptr<AVL_node<T,S>> avl_node) // where to get avlnode from?
 {
-//    avl_node->updateHeight();
-//    avl_node->updateBF();
     if(avl_node->father)
     {
         avl_node->father->updateHeight();
@@ -451,7 +397,6 @@ std::shared_ptr<AVL_node<T,S>>  AVL_node<T,S>::treeBalance(std::shared_ptr<AVL_n
             avl_node->father->father->updateBF();
         }
     }
-
     std::shared_ptr<AVL_node<T,S>> tmp = avl_node;
     while(avl_node != nullptr)
     {
@@ -465,7 +410,6 @@ std::shared_ptr<AVL_node<T,S>>  AVL_node<T,S>::treeBalance(std::shared_ptr<AVL_n
             }
             avl_node = rightRotation(avl_node); //LL
         }
-
         if(bf == -INVALID_BF)
         {
             if(avl_node->getRight_son()->getBF() == 1)
@@ -477,11 +421,8 @@ std::shared_ptr<AVL_node<T,S>>  AVL_node<T,S>::treeBalance(std::shared_ptr<AVL_n
         avl_node->updateHeightAndBF();
         tmp = avl_node;
         avl_node= avl_node->father;
-
     }
-
     return tmp;
-
 }
 
 template<class T,class S>
@@ -514,7 +455,7 @@ std::shared_ptr<AVL_node<T,S>> AVL_node<T,S>::leftRotation(std::shared_ptr<AVL_n
     root->right_son = new_root_left_son;
     if(new_root_left_son != nullptr){
         new_root_left_son->father = root;
-        // root->right_son = nullptr;
+
     }
     return new_root;
 
@@ -543,7 +484,6 @@ std::shared_ptr<AVL_node<T,S>> AVL_node<T,S>::rightRotation(std::shared_ptr<AVL_
 
     }
 
-
     new_root->father = root_old_father;
 
     root->father = new_root;
@@ -556,17 +496,14 @@ std::shared_ptr<AVL_node<T,S>> AVL_node<T,S>::rightRotation(std::shared_ptr<AVL_
     }
 
     return new_root;
-
 }
 
 
 template<class T,class S>
 std::shared_ptr<AVL_node<T,S>> AVL_node<T,S>::find(std::shared_ptr<AVL_node<T,S>> root,S key)
 {
-    // std::shared_ptr<AVL_node<T,S>> tmp = this;
-//    std::shared_ptr<AVL_node<T,S>> tmp = (std::make_shared<AVL_node>(*this));
     std::shared_ptr<AVL_node<T,S>> tmp = root;
-    // std::shared_ptr<AVL_node<T,S>> tmp(std::make_shared<AVL_node>(*this)); // maybe need <T,S>
+
 
     while(tmp != nullptr)
     {
@@ -582,10 +519,8 @@ std::shared_ptr<AVL_node<T,S>> AVL_node<T,S>::find(std::shared_ptr<AVL_node<T,S>
         {
             tmp = tmp->left_son;
         }
-
     }
     return nullptr;
-
 }
 
 template<class T,class S>
@@ -596,7 +531,6 @@ std::shared_ptr<AVL_node<T,S>> AVL_node<T,S>::deleteNode(std::shared_ptr<AVL_nod
         return nullptr;
     }
     std::shared_ptr<AVL_node<T,S>> node_to_delete = root->find(root ,key);
-    // std::shared_ptr<AVL_node<T,S>> tmp(new AVL_node(*this));
 
     if(node_to_delete == nullptr)
     {
@@ -612,18 +546,8 @@ std::shared_ptr<AVL_node<T,S>> AVL_node<T,S>::deleteNode(std::shared_ptr<AVL_nod
     else
     {
         std::shared_ptr<AVL_node<T,S>> NextInOrderVal = node_to_delete->getNextInOrderVal();
-
         swapNodes(node_to_delete, NextInOrderVal);
         swapHeightAndBF(node_to_delete, NextInOrderVal);
-
-        /**
-         * do the swapnode
-         * swap height and bf
-         * maybe revert the changes on op= and ~ of group
-         *
-         *
-         *
-         * */
 
         return deleteNodeHelper(node_to_delete,root);
     }
@@ -643,89 +567,46 @@ void AVL_node<T,S>::swapNodes(std::shared_ptr<AVL_node<T,S>> node_to_delete,std:
     std::shared_ptr<AVL_node<T,S>>  NextInOrderVal_right_son= NextInOrderVal->right_son;
     std::shared_ptr<AVL_node<T,S>>  NextInOrderVal_left_son= NextInOrderVal->left_son;
 
+    //********************************************************
+    NextInOrderVal->father = node_to_delete_father;
+    node_to_delete->right_son = NextInOrderVal_right_son;
+    node_to_delete->left_son = NextInOrderVal_left_son;
+    NextInOrderVal->left_son = node_to_delete_left_son;
+    node_to_delete_left_son->father = NextInOrderVal;
+    //********************************************************
+
+
     //if NTD has father or not
     if(node_to_delete_father == nullptr)
     {
         //if there is straight-connection or not
         if(node_to_delete_right_son == NextInOrderVal) //straight-connection Next is NTD right son
         {
+            //********************************************************
+            NextInOrderVal->right_son = node_to_delete;
+            node_to_delete->father = NextInOrderVal;
+            //********************************************************
+
             //if Next has a right son or not
             if(NextInOrderVal_right_son != nullptr) // Next has right son
             {
-                NextInOrderVal->father = node_to_delete_father;
-                node_to_delete->right_son = NextInOrderVal_right_son;
-
-                node_to_delete->left_son = NextInOrderVal_left_son;
-                NextInOrderVal->left_son = node_to_delete_left_son;
-
-                node_to_delete_left_son->father = NextInOrderVal;
-
-                NextInOrderVal->right_son = node_to_delete;
-                node_to_delete->father = NextInOrderVal;
-
-                NextInOrderVal_right_son->father = node_to_delete;  // (*)
-
-            }
-            else // next is a leaf
-            {
-                NextInOrderVal->father = node_to_delete_father;
-                node_to_delete->right_son = NextInOrderVal_right_son;
-
-                node_to_delete->left_son = NextInOrderVal_left_son;
-                NextInOrderVal->left_son = node_to_delete_left_son;
-
-                node_to_delete_left_son->father = NextInOrderVal;
-
-                NextInOrderVal->right_son = node_to_delete;
-                node_to_delete->father = NextInOrderVal;
-
-                // same code as the above except there is no (*)
+                NextInOrderVal_right_son->father = node_to_delete;
             }
         }
         else // Next is his father's left son
         {
+            //********************************************************
+            NextInOrderVal->right_son = node_to_delete_right_son;
+            node_to_delete->father = NextInOrderVal_father;
+            NextInOrderVal_father->left_son = node_to_delete;
+            node_to_delete_right_son->father = NextInOrderVal;
+            //********************************************************
+
             //if Next has a right son or not
             if(NextInOrderVal_right_son != nullptr) // Next has right son
             {
-                NextInOrderVal->father = node_to_delete_father;
-                node_to_delete->right_son = NextInOrderVal_right_son;
-
-                node_to_delete->left_son = NextInOrderVal_left_son;
-                NextInOrderVal->left_son = node_to_delete_left_son;
-
-                node_to_delete_left_son->father = NextInOrderVal;
-
-                NextInOrderVal->right_son = node_to_delete_right_son;
-                node_to_delete->father = NextInOrderVal_father;
-
-                NextInOrderVal_father->left_son = node_to_delete;
-
-                node_to_delete_right_son->father = NextInOrderVal;
-
-                NextInOrderVal_right_son->father = node_to_delete; // (**)
-
+                NextInOrderVal_right_son->father = node_to_delete;
             }
-            else // next is a leaf
-            {
-                NextInOrderVal->father = node_to_delete_father;
-                node_to_delete->right_son = NextInOrderVal_right_son;
-
-                node_to_delete->left_son = NextInOrderVal_left_son;
-                NextInOrderVal->left_son = node_to_delete_left_son;
-
-                node_to_delete_left_son->father = NextInOrderVal;
-                //
-                NextInOrderVal->right_son = node_to_delete_right_son;
-                node_to_delete->father = NextInOrderVal_father;
-
-                NextInOrderVal_father->left_son = node_to_delete;
-
-                node_to_delete_right_son->father = NextInOrderVal;
-
-                //same as if above but has no (**)
-
-            }
-
         }
     }
     else // NTD HAS a father
@@ -735,189 +616,68 @@ void AVL_node<T,S>::swapNodes(std::shared_ptr<AVL_node<T,S>> node_to_delete,std:
             //if there is straight-connection or not
             if(node_to_delete_right_son == NextInOrderVal) //straight-connection
             {
+                //********************************************************
+                NextInOrderVal->right_son = node_to_delete;
+                node_to_delete->father = NextInOrderVal;
+                node_to_delete_father->right_son = NextInOrderVal;
+                //********************************************************
+
                 //if Next has a right son or not
                 if(NextInOrderVal_right_son != nullptr) // Next has right son
                 {
-                    NextInOrderVal->father = node_to_delete_father;
-                    node_to_delete->right_son = NextInOrderVal_right_son;
-//
-                    node_to_delete->left_son = NextInOrderVal_left_son;
-                    NextInOrderVal->left_son = node_to_delete_left_son;
-//
-                    node_to_delete_left_son->father = NextInOrderVal;
-//
-                    NextInOrderVal->right_son = node_to_delete;
-                    node_to_delete->father = NextInOrderVal;
-//
-                    NextInOrderVal_right_son->father = node_to_delete;  // (*)
-
-                    node_to_delete_father->right_son = NextInOrderVal; // (***)
-                    // same as case with no father with addition of (***)
-
+                    NextInOrderVal_right_son->father = node_to_delete;
                 }
-                else // next is a leaf
-                {
-                    NextInOrderVal->father = node_to_delete_father;
-                    node_to_delete->right_son = NextInOrderVal_right_son;
-////
-                    node_to_delete->left_son = NextInOrderVal_left_son;
-                    NextInOrderVal->left_son = node_to_delete_left_son;
-////
-                    node_to_delete_left_son->father = NextInOrderVal;
-////
-                    NextInOrderVal->right_son = node_to_delete;
-                    node_to_delete->father = NextInOrderVal;
-////
-//                    NextInOrderVal_right_son->father = node_to_delete;  // (*)
-//
-                    node_to_delete_father->right_son = NextInOrderVal; // (***)
-//                    // same as if if above except the commented line above
-
-                }
-
             }
             else // Next is his father's left son
             {
+                //********************************************************
+                NextInOrderVal->right_son = node_to_delete_right_son;
+                node_to_delete->father = NextInOrderVal_father;
+                NextInOrderVal_father->left_son = node_to_delete;
+                node_to_delete_right_son->father = NextInOrderVal;
+                node_to_delete_father->right_son = NextInOrderVal;
+                //********************************************************
+
                 //if Next has a right son or not
                 if(NextInOrderVal_right_son != nullptr) // Next has right son
                 {
-                    NextInOrderVal->father = node_to_delete_father;
-                    node_to_delete->right_son = NextInOrderVal_right_son;
-//
-                    node_to_delete->left_son = NextInOrderVal_left_son;
-                    NextInOrderVal->left_son = node_to_delete_left_son;
-//
-                    node_to_delete_left_son->father = NextInOrderVal;
-//
-                    NextInOrderVal->right_son = node_to_delete_right_son;
-                    node_to_delete->father = NextInOrderVal_father;
-//
-                    NextInOrderVal_father->left_son = node_to_delete;
-//
-                    node_to_delete_right_son->father = NextInOrderVal;
-//
-                    NextInOrderVal_right_son->father = node_to_delete; // (**)
-
-                    node_to_delete_father->right_son = NextInOrderVal; //(****)
-                    //same as the case with no father except this has (****)
-
+                    NextInOrderVal_right_son->father = node_to_delete;
                 }
-                else // next is a leaf
-                {
-                    NextInOrderVal->father = node_to_delete_father;
-                    node_to_delete->right_son = NextInOrderVal_right_son;
-//
-                    node_to_delete->left_son = NextInOrderVal_left_son;
-                    NextInOrderVal->left_son = node_to_delete_left_son;
-//
-                    node_to_delete_left_son->father = NextInOrderVal;
-//                    //
-                    NextInOrderVal->right_son = node_to_delete_right_son;
-                    node_to_delete->father = NextInOrderVal_father;
-//
-                    NextInOrderVal_father->left_son = node_to_delete;
-//
-                    node_to_delete_right_son->father = NextInOrderVal;
-//
-                    node_to_delete_father->right_son = NextInOrderVal; // same as case with no father with addition of this line
-
-
-                }
-
             }
-
         }
         else // NTD is his fathers left
         {
             //if there is straight-connection or not
             if(node_to_delete_right_son == NextInOrderVal) //straight-connection
             {
+                //********************************************************
+                NextInOrderVal->right_son = node_to_delete;
+                node_to_delete->father = NextInOrderVal;
+                node_to_delete_father->left_son = NextInOrderVal;
+                //********************************************************
+
                 //if Next has a right son or not
                 if(NextInOrderVal_right_son != nullptr) // Next has right son
                 {
-                    NextInOrderVal->father = node_to_delete_father;
-                    node_to_delete->right_son = NextInOrderVal_right_son;
-////
-                    node_to_delete->left_son = NextInOrderVal_left_son;
-                    NextInOrderVal->left_son = node_to_delete_left_son;
-////
-                    node_to_delete_left_son->father = NextInOrderVal;
-////
-                    NextInOrderVal->right_son = node_to_delete;
-                    node_to_delete->father = NextInOrderVal;
-////
                     NextInOrderVal_right_son->father = node_to_delete;  // (*)
-//
-                    node_to_delete_father->left_son = NextInOrderVal; // changed rightson to leftson
-
-
-                }
-                else // next is a leaf
-                {
-                    NextInOrderVal->father = node_to_delete_father;
-                    node_to_delete->right_son = NextInOrderVal_right_son;
-//////
-                    node_to_delete->left_son = NextInOrderVal_left_son;
-                    NextInOrderVal->left_son = node_to_delete_left_son;
-//////
-                    node_to_delete_left_son->father = NextInOrderVal;
-//////
-                    NextInOrderVal->right_son = node_to_delete;
-                    node_to_delete->father = NextInOrderVal;
-//////
-////                    NextInOrderVal_right_son->father = node_to_delete;  // (*)
-////
-                    node_to_delete_father->left_son = NextInOrderVal; // (***)
                 }
             }
             else // Next is his father's left son
             {
+                //********************************************************
+                NextInOrderVal->right_son = node_to_delete_right_son;
+                node_to_delete->father = NextInOrderVal_father;
+                NextInOrderVal_father->left_son = node_to_delete;
+                node_to_delete_right_son->father = NextInOrderVal;
+                node_to_delete_father->left_son = NextInOrderVal;
+                //********************************************************
+
                 //if Next has a right son or not
                 if(NextInOrderVal_right_son != nullptr) // Next has right son
                 {
-                    NextInOrderVal->father = node_to_delete_father;
-                    node_to_delete->right_son = NextInOrderVal_right_son;
-////
-                    node_to_delete->left_son = NextInOrderVal_left_son;
-                    NextInOrderVal->left_son = node_to_delete_left_son;
-////
-                    node_to_delete_left_son->father = NextInOrderVal;
-////
-                    NextInOrderVal->right_son = node_to_delete_right_son;
-                    node_to_delete->father = NextInOrderVal_father;
-////
-                    NextInOrderVal_father->left_son = node_to_delete;
-////
-                    node_to_delete_right_son->father = NextInOrderVal;
-////
-                    NextInOrderVal_right_son->father = node_to_delete; // (**)
-//
-                    node_to_delete_father->left_son = NextInOrderVal; //(****) // changed right to left
-                    //same as the case with no father except this has (****)
-
-                }
-                else // next is a leaf
-                {
-                    NextInOrderVal->father = node_to_delete_father;
-                    node_to_delete->right_son = NextInOrderVal_right_son;
-////
-                    node_to_delete->left_son = NextInOrderVal_left_son;
-                    NextInOrderVal->left_son = node_to_delete_left_son;
-////
-                    node_to_delete_left_son->father = NextInOrderVal;
-////                    //
-                    NextInOrderVal->right_son = node_to_delete_right_son;
-                    node_to_delete->father = NextInOrderVal_father;
-////
-                    NextInOrderVal_father->left_son = node_to_delete;
-////
-                    node_to_delete_right_son->father = NextInOrderVal;
-////
-                    node_to_delete_father->left_son = NextInOrderVal; // same as case with no father with addition of this line
-
+                    NextInOrderVal_right_son->father = node_to_delete;
                 }
             }
-
         }
     }
 
@@ -954,9 +714,7 @@ std::shared_ptr<AVL_node<T,S>> AVL_node<T,S>::getNextInOrderVal()
         tmp = tmp->left_son;
 
     }
-
     return tmp;
-
 }
 
 template<class T,class S>
@@ -971,8 +729,6 @@ void AVL_node<T,S>::SwapInfoAndKey(std::shared_ptr<AVL_node<T,S>> avl_node)
     avl_node->key = tmp_key;
     avl_node->info = tmp_info;
 
-//    std::cout << this->key << " " << this->info << std::endl;
-//    std::cout << avl_node->key << " " << avl_node->info << std::endl;
 }
 
 template<class T,class S>
@@ -1005,8 +761,6 @@ void AVL_node<T,S>::updateHeightAndBF()
     this->updateHeight();
     this->updateBF();
 
-    //  this->printBFAndHeight();
-
 }
 
 
@@ -1022,36 +776,14 @@ void AVL_node<T,S>::preOrder(std::shared_ptr<AVL_node<T,S>> root, DoSomething do
 
 }
 
-// template<class T,class S>
-// void  AVL_node<T,S>::updateHeightAndBFSearchPath()
-// {
-//     std::shared_ptr<AVL_node<T,S>> tmp = (std::make_shared<AVL_node>(*this));
-//     //    std::shared_ptr<AVL_node<T,S>> root = (std::make_shared<AVL_node>(key,info));
-//     while(tmp)
-//     {
-//         tmp->updateHeight();
-//         tmp->updateBF();
-//         tmp = tmp->father;
-//     }
-// }
 
 template<class T,class S>
-// template<class DoSomething>
-// void AVL_node<T,S>::postOrder(std::shared_ptr<AVL_node<T,S>> root, DoSomething doSomething)
 void AVL_node<T,S>::postOrderAndDestroy(std::shared_ptr<AVL_node<T,S>> root)
 {
     if(root == nullptr) return;
-
-
-    // postOrder(root->left_son,doSomething);
-    // postOrder(root->right_son, doSomething);
-
     postOrderAndDestroy(root->left_son);
     postOrderAndDestroy(root->right_son);
-
     root->NodePointSiblingsToNull(root);
-
-
 }
 
 
@@ -1075,7 +807,7 @@ void AVL_node<T,S>::printBFAndHeight()
 template<class T,class S>
 std::shared_ptr<AVL_node<T,S>> AVL_node<T,S>::deleteNodeHelper(std::shared_ptr<AVL_node<T,S>> node_to_delete, std::shared_ptr<AVL_node<T,S>> root)
 {
-    //std::shared_ptr<AVL_node<T,S>> func(node_to_delete->right, node_to_delete->left)
+
     std::shared_ptr<AVL_node<T,S>> tmp = node_to_delete->left_son ? node_to_delete->left_son :
                                          node_to_delete->right_son ;
 
@@ -1099,11 +831,7 @@ std::shared_ptr<AVL_node<T,S>> AVL_node<T,S>::deleteNodeHelper(std::shared_ptr<A
                 node_to_delete->father->right_son = nullptr;
             }
 
-
             node_to_delete->father = nullptr;
-
-
-            // node_to_delete_father->updateHeightAndBFSearchPath();
             root = node_to_delete_father->treeBalance(node_to_delete_father);
             // update height and bf for all nodes in the searching path and treeBalance
             return root;
@@ -1111,10 +839,8 @@ std::shared_ptr<AVL_node<T,S>> AVL_node<T,S>::deleteNodeHelper(std::shared_ptr<A
     }
     else if(node_to_delete->left_son != nullptr)  //one child case (left son)
     {
-        //std::shared_ptr<AVL_node<T,S>> node_to_delete_father = node_to_delete->get().father;
         if(node_to_delete->father == nullptr) // we are at root
         {
-
             root = node_to_delete->left_son;
             root->father = nullptr;
             node_to_delete->left_son = nullptr;
@@ -1132,7 +858,6 @@ std::shared_ptr<AVL_node<T,S>> AVL_node<T,S>::deleteNodeHelper(std::shared_ptr<A
         node_to_delete->left_son = nullptr;
         node_to_delete->father = nullptr;
 
-        // node_to_delete_father->updateHeightAndBFSearchPath();
         root = node_to_delete_father->treeBalance(node_to_delete_father);
         // update height and bf for all nodes in the searching path and treeBalance
         return root;
@@ -1148,7 +873,6 @@ std::shared_ptr<AVL_node<T,S>> AVL_node<T,S>::deleteNodeHelper(std::shared_ptr<A
             return root; //child height and bf doesnt change
         }
 
-
         if(node_to_delete->father->left_son == node_to_delete)
         {
             node_to_delete->father->left_son = node_to_delete->right_son;
@@ -1161,14 +885,6 @@ std::shared_ptr<AVL_node<T,S>> AVL_node<T,S>::deleteNodeHelper(std::shared_ptr<A
         node_to_delete->right_son = nullptr;
         node_to_delete->father = nullptr;
 
-
-//        node_to_delete->father->right_son = node_to_delete->right_son;
-//        node_to_delete->right_son->father =  node_to_delete->father;
-//        node_to_delete->right_son = nullptr;
-//        node_to_delete->father = nullptr;
-
-
-        // node_to_delete_father->updateHeightAndBFSearchPath();
         root = node_to_delete_father->treeBalance(node_to_delete_father);
         // update height and bf for all nodes in the searching path and treeBalance
         return root;
@@ -1194,20 +910,7 @@ std::shared_ptr<AVL_node<T,S>> AVL_node<T,S>::clone(const std::shared_ptr<AVL_no
     temp->left_son = clone(root->left_son,temp);
     temp->right_son = clone(root->right_son, temp);
     return temp;
-    /*
-        node  *clone( root ) :  
-       if (root == NULL ) : return root; 
-     
-       //create new node and make it a copy of node pointed by root 
-       node *temp = (node *)malloc(sizeof(node)) ; 
-       temp->data = root-> data;    //copying data 
-       temp->left = clone(root -> left);    //cloning left child 
-       temp->right = clone(root -> right);  //cloning right child 
-       return temp; 
-    */
 
 }
-
-
 
 #endif

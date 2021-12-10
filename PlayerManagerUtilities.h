@@ -2,9 +2,6 @@
 // Created by omarm on 02/12/2021.
 //
 
-
-
-
 #ifndef MIVNI_PLAYERMANAGERUTILITIES_H
 #define MIVNI_PLAYERMANAGERUTILITIES_H
 
@@ -13,7 +10,7 @@
 //******************************************************
 //******************************************************
 //******************************************************
-//player
+//LevelAndId
 //******************************************************
 //******************************************************
 //******************************************************
@@ -46,12 +43,16 @@ public:
     bool operator>(const LevelAndId& other) const ;
 
     void setPlayer_node(std::shared_ptr<AVL_node<player,int>> new_player_node);
-//    void reverseInOrderNumTimes(std::shared_ptr<AVL_node<LevelAndId,LevelAndId>> avlNode, int Players[], int *numOfPlayers,int count);
-
-
 
 };
 
+//******************************************************
+//******************************************************
+//******************************************************
+//LevelAndId
+//******************************************************
+//******************************************************
+//******************************************************
 
 class group;
 class player
@@ -60,9 +61,6 @@ class player
 private:
     LevelAndId level_and_id;
     std::shared_ptr<AVL_node<group,int>> group_node;
-    // void *group_node;
-    // std::shared_ptr<AVL_node<LevelAndId,LevelAndId>> player_node;
-
 
 public:
 
@@ -75,7 +73,6 @@ public:
     player& operator=(const player& other); // avl_node1= avl_node2
     LevelAndId getplayerLevelAndId();
     std::shared_ptr<AVL_node<group,int>> getGroup_node() const ;// maybe &
-    // std::shared_ptr<AVL_node<LevelAndId,LevelAndId>> getPlayer_node() const;
 
     void setPlayerGnode(std::shared_ptr<AVL_node<group,int>> gnode);
     void setPlayerLevel(int new_level);
@@ -111,10 +108,6 @@ public:
     group(const group&); //copy constructor
     group& operator=(const group& other); // group1 = group2
 
-    // friend bool operator==(const group& group1, const group& group2);
-    // friend bool operator<(const group& group1, const group& group2);
-    // friend bool operator>(const group& group1, const group& group2);
-
     int getGroupID() const;
     int get_num_of_players() const;
     std::shared_ptr<AVL_node<LevelAndId,LevelAndId>> getPlayers_tree() const;
@@ -127,39 +120,6 @@ public:
                                    std::shared_ptr<AVL_node<player,int>> new_player_node );
 };
 
-//******************************************************
-//******************************************************
-//******************************************************
-//class LevelAndId
-//******************************************************
-//******************************************************
-//******************************************************
-
-//
-//class LevelAndId
-//{
-//private:
-//    int Level;
-//    int Id;
-//    friend class player;
-//
-//public:
-//    LevelAndId(int Level, int Id) : Level(Level) , Id(Id){};
-//    LevelAndId() =default;
-//    ~LevelAndId() =default;
-//    LevelAndId(const LevelAndId&) =default;
-//    LevelAndId& operator=(const LevelAndId& other) = default;
-//
-//    int getId() const;
-//    int getLevel() const;
-//
-//
-//    bool operator==(const LevelAndId& other) const ;     // check how to declare as friend
-//    bool operator<(const LevelAndId& other) const ;
-//    bool operator>(const LevelAndId& other) const ;
-//
-//
-//};
 
 
 #endif //MIVNI_PLAYERMANAGERUTILITIES_H

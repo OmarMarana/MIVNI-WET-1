@@ -109,12 +109,6 @@ StatusType PlayerManager::PMAddPlayer( int PlayerID, int GroupID, int Level)
         this->level_and_id_player_tree = this->level_and_id_player_tree->treeBalance(this->level_and_id_player_tree->find
                 (this->level_and_id_player_tree,levelAndId ));
 
-//        if(this->max_level_group_tree == nullptr)  //
-//        {
-//            this->max_level_group_tree =this->max_level_group_tree->insert(this->max_level_group_tree,int,levelAndId);
-//        }
-
-
 
         std::shared_ptr<AVL_node<LevelAndId,int>> max_level_node = this->max_level_group_tree->find(this->max_level_group_tree,GroupID);
         if(max_level_node == nullptr)
@@ -296,7 +290,6 @@ StatusType PlayerManager::PMGetHighestLevel( int GroupID, int *PlayerID)
     try
     {
 
-
         if(GroupID < 0)
         {
             if(this->num_of_players == 0)
@@ -309,7 +302,6 @@ StatusType PlayerManager::PMGetHighestLevel( int GroupID, int *PlayerID)
         }
         else
         {
-
             std::shared_ptr<AVL_node<group,int>> group_node = this->group_tree->find(this->group_tree,GroupID);
             if(group_node->getInfo().get_num_of_players() == 0)
             {
@@ -321,9 +313,6 @@ StatusType PlayerManager::PMGetHighestLevel( int GroupID, int *PlayerID)
 
             group_node = nullptr;
         }
-
-
-
     }
     catch(std::exception& e) {
         return ALLOCATION_ERROR;
@@ -369,12 +358,11 @@ StatusType PlayerManager::PMGetAllPlayersByLevel( int GroupID, int **Players, in
             int num_of_players_in_group = this->group_tree->find(this->group_tree,GroupID)->getInfo().get_num_of_players();
             if(num_of_players_in_group == 0 )
             {
-                *Players = NULL;  // CHECK FOR DUMB BUG HERE
+                *Players = nullptr;  // CHECK FOR DUMB BUG HERE
                 *numOfPlayers = 0;
                 return  SUCCESS;
 
             }
-//            int *tmp = (int*)malloc(sizeof(*tmp) * num_of_players_in_group );
             *Players = (int*)malloc(sizeof(**Players) * num_of_players_in_group );
             this->group_tree->find(this->group_tree, GroupID)->getInfo().getPlayers_tree()->reverseInOrderNumTimes(
                     this->group_tree->find(this->group_tree, GroupID)->getInfo().getPlayers_tree(),*Players,numOfPlayers,num_of_players_in_group);
@@ -400,17 +388,13 @@ StatusType PlayerManager::PMGetGroupsHighestLevel( int numOfGroups, int **Player
     }
     try
     {
-//        int * arr = (int*) malloc(sizeof (int) * (numOfGroups));
         *Players = (int*) malloc(sizeof (int) * (numOfGroups));
-//        *Players = arr;
         if(*Players == nullptr)
         {
             return ALLOCATION_ERROR;
         }
         int numOfgroups = 0;
         this->max_level_group_tree->InOrderNumTimes(this->max_level_group_tree,*Players,&numOfgroups,numOfGroups);
-
-
     }
     catch(std::exception& e) {
         return ALLOCATION_ERROR;
@@ -490,8 +474,6 @@ StatusType PlayerManager::PMReplaceGroup( int GroupID, int ReplacementID)
     }
     try
     {
-
-
         std::shared_ptr<AVL_node<group,int>> GroupID_node = this->group_tree->find(this->group_tree,GroupID);
 
         if(GroupID_node->getInfo().get_num_of_players() == 0)
@@ -502,19 +484,14 @@ StatusType PlayerManager::PMReplaceGroup( int GroupID, int ReplacementID)
 
         std::shared_ptr<AVL_node<group,int>> ReplacementID_node = this->group_tree->find(this->group_tree,ReplacementID);
 
-
-
         std::shared_ptr<AVL_node<LevelAndId,LevelAndId>> GroupId_subtree = GroupID_node->getInfo().getPlayers_tree();
         std::shared_ptr<AVL_node<LevelAndId,LevelAndId>> ReplacementID_subtree = ReplacementID_node->getInfo().getPlayers_tree();
 
         inOrderAndUpdateGroupNode(GroupId_subtree,ReplacementID_node);
 
-
-//        std::shared_ptr<AVL_node<LevelAndId,LevelAndId>> GroupId_max_player =  GroupID_node->getInfo().getMax_level_player();
         int GroupId_num_of_players = GroupID_node->getInfo().get_num_of_players();
         LevelAndId GroupId_max_player_LI = GroupID_node->getInfo().getMax_level_player()->getKey();
 
-//        std::shared_ptr<AVL_node<LevelAndId,LevelAndId>> ReplacementId_max_player =  ReplacementID_node->getInfo().getMax_level_player();
         int ReplacementId_num_of_players = ReplacementID_node->getInfo().get_num_of_players();
         LevelAndId ReplacementID_max_player_LI;
         if(ReplacementId_num_of_players == 0)
@@ -526,12 +503,7 @@ StatusType PlayerManager::PMReplaceGroup( int GroupID, int ReplacementID)
              ReplacementID_max_player_LI = ReplacementID_node->getInfo().getMax_level_player()->getKey();
         }
 
-
-
-
-
         LevelAndId * mergedInfoArr = new LevelAndId[ReplacementId_num_of_players + GroupId_num_of_players];
-
 
         std::shared_ptr<AVL_node<LevelAndId,LevelAndId>> merged_player_trees = GroupId_subtree->mergeAvlTrees(GroupId_subtree,
                                                                                                               ReplacementID_subtree,mergedInfoArr,GroupId_num_of_players, ReplacementId_num_of_players);
@@ -539,7 +511,6 @@ StatusType PlayerManager::PMReplaceGroup( int GroupID, int ReplacementID)
 
         GroupID_node->getInfo().set_max_level_player(nullptr);
         ReplacementID_node->getInfo().set_max_level_player(nullptr);
-
 
         ReplacementID_node->getInfo().updatePlayerTreeLI(ReplacementID_subtree, nullptr);
         ReplacementID_subtree->postOrderAndDestroy(ReplacementID_subtree);
@@ -576,8 +547,6 @@ StatusType PlayerManager::PMReplaceGroup( int GroupID, int ReplacementID)
             {
                 this->max_level_group_tree->find(this->max_level_group_tree, ReplacementID)->setInfo(GroupId_max_player_LI);
             }
-
-
         }
         else
         {
@@ -585,18 +554,11 @@ StatusType PlayerManager::PMReplaceGroup( int GroupID, int ReplacementID)
                     ,ReplacementID_max_player_LI));
         }
 
-
-
         this->max_level_group_tree=this->max_level_group_tree->deleteNode(this->max_level_group_tree,GroupID);
 
         delete [] mergedInfoArr;
-
         merged_player_trees = nullptr;
-
-
         ReplacementID_node = nullptr;
-
-
     }
     catch(std::exception& e) {
         return ALLOCATION_ERROR;
